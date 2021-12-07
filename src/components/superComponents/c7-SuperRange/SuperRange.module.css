@@ -1,0 +1,65 @@
+.range {
+    -webkit-appearance: none;
+    width: 18%;
+    height: 12px;
+    position: absolute;
+    background: orange;
+    outline: none;
+}
+
+.range input {
+    pointer-events: none;
+    position: absolute;
+    overflow: hidden;
+    left: 25%;
+    top: 15px;
+    width: 50%;
+    outline: none;
+    height: 18px;
+    margin: 0;
+    padding: 0;
+
+}
+
+.range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: deeppink;
+    cursor: pointer;
+    border-radius: 50%;
+
+    pointer-events: all;
+    position: relative;
+    z-index: 1;
+    outline: 0;
+}
+
+.range::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #ea4550;
+    cursor: pointer;
+
+    pointer-events: all;
+    position: relative;
+    z-index: 10;
+    -moz-appearance: none;
+    width: 9px;
+}
+
+.range input::-moz-range-track {
+    position: relative;
+    z-index: -1;
+    border: 0;
+}
+.range input:last-of-type::-moz-range-track {
+    -moz-appearance: none;
+    background: none transparent;
+    border: 0;
+
+}
+.range input[type=range]::-moz-focus-outer {
+    border: 0;
+}

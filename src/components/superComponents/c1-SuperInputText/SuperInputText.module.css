@@ -1,0 +1,28 @@
+/*.superInput {*/
+/*    border: 3px solid chocolate;*/
+/*    background: white;*/
+/*}*/
+/*.input:focus {*/
+/*    outline: none;*/
+/*}*/
+
+.errorInput {
+    border: 3px solid lime;
+    background: red;
+}
+
+.error {
+    color: red;
+}
+
+.superInput{
+    position: relative;
+    border: 3px solid black;
+    display: inline;
+    border-radius: 5rem;
+    outline: none;
+    color:blue;
+    font-size: 16px;
+    padding-left: 9px;
+}
+
