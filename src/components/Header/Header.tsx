@@ -1,13 +1,16 @@
 import React from 'react'
 import {NavLink} from "react-router-dom";
 import {PATH} from "../RoutesBlock/RoutesBlock";
+import {useSelector} from "react-redux";
+import {AppStoreType} from "../store/store";
 
 export const Header = () => {
+	const isAuth =useSelector((state:AppStoreType)=>state.login.isAuth)
 	return (
 		<div style={{display:'flex',justifyContent:'center'}}>
-			<div style={{margin:'20px'}}>
+			{!isAuth&&<div style={{margin: '20px'}}>
 				<NavLink to={PATH.LOGINPAGE}>login</NavLink>
-			</div>
+			</div>}
 			<div style={{margin:'20px'}}>
 				<NavLink to={PATH.NEWPASSPAGE}>newPass</NavLink>
 			</div>
