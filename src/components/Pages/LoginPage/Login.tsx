@@ -9,6 +9,7 @@ import {AppStoreType} from "../../store/store";
 export const Login = () => {
 	const loginState=useSelector((state:AppStoreType)=>state.login)
 	const dispatch=useDispatch()
+	const [checked,setChecked]=useState(false)
 	const [login,setLogin]=useState('akayuda93@gmail.com')
 	const [password,setPassword]=useState('qwerty12')
 	const onChangeLogin=(e:any)=>{
@@ -18,7 +19,7 @@ export const Login = () => {
 		setPassword(e.currentTarget.value)
 	}
 
-if (loginState.isAuth){
+   if (loginState.isAuth){
 	return <Navigate to={PATH.PROFILEPAGE}/>
 
 }
@@ -29,8 +30,9 @@ return (
 				<div>Sign in</div>
 				<div><input onChange={onChangeLogin} value={login}/></div>
 				<div><input onChange={onChangePassword} value={password}/></div>
-				<div>forgot Password</div>
-				<div><button onClick={()=>{dispatch(loginTC(login,password))}}>login</button></div>
+				<div>Remember me<input type={"checkbox"} checked={checked} onClick={()=>setChecked(!checked)}/></div>
+				<div><NavLink to={PATH.RECOVERYPAGE}>Forgot password</NavLink></div>
+				<div><button onClick={()=>{dispatch(loginTC(login,password,checked))}}>login</button></div>
 				<div><NavLink to={PATH.REGISTRATIONPAGE}>Sign Up</NavLink></div>
 			</div>
 
