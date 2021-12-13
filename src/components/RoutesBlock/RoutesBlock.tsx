@@ -1,12 +1,13 @@
 import React from 'react'
 import {Navigate, Route, Routes} from "react-router-dom";
 import {Error404} from "../Pages/ErrorPage/Error404";
+import { LoginContainer } from '../Pages/LoginPage/LoginContainer';
 import {NewPass} from "../Pages/NewPassPage/NewPass";
 import {Profile} from "../Pages/ProfilePage/Profile";
 import {Recovery} from "../Pages/RecoveryPage/Recovery";
 import {Registration} from "../Pages/RegistPage/Regist";
 import {Test} from "../Pages/TestPage/Test";
-import {Login} from "../Pages/LoginPage/Login";
+
 
 export const PATH = {
   LOGINPAGE: '/login',
@@ -23,7 +24,7 @@ export const RoutesBlock = () => {
       <Routes>
 
         <Route path={'/'} element={<Navigate to={PATH.LOGINPAGE}/>}/>
-        <Route path={PATH.LOGINPAGE} element={<Login/>}/>
+        <Route path={PATH.LOGINPAGE} element={<LoginContainer/>}/>
         <Route path={PATH.NEWPASSPAGE} element={<NewPass/>}/>
         <Route path={PATH.PROFILEPAGE} element={<Profile/>}/>
         <Route path={PATH.RECOVERYPAGE} element={<Recovery/>}/>

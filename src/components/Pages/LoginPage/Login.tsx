@@ -1,43 +1,52 @@
-import React, {useState} from 'react'
-import {Navigate, NavLink} from "react-router-dom";
+import {NavLink} from "react-router-dom";
 import {PATH} from "../../RoutesBlock/RoutesBlock";
-import {useDispatch, useSelector} from "react-redux";
-import {loginTC} from "../../Reducers/login-reducer";
-import {AppStoreType} from "../../store/store";
+import React from "react";
+import SuperButton from "../../superComponents/c2-SuperButton/SuperButton";
+import SuperCheckbox from "../../superComponents/c3-SuperCheckbox/SuperCheckbox";
+import SuperInputText from "../../superComponents/c1-SuperInputText/SuperInputText";
 
 
-export const Login = () => {
-	const loginState=useSelector((state:AppStoreType)=>state.login)
-	const dispatch=useDispatch()
-	const [checked,setChecked]=useState(false)
-	const [login,setLogin]=useState('akayuda93@gmail.com')
-	const [password,setPassword]=useState('qwerty12')
-	const onChangeLogin=(e:any)=>{
-		setLogin(e.currentTarget.value)
-	}
-		const onChangePassword=(e:any)=>{
-		setPassword(e.currentTarget.value)
-	}
-
-   if (loginState.isAuth){
-	return <Navigate to={PATH.PROFILEPAGE}/>
-
+type LoginPropsType = {
+    onChangeEmail: (e: React.FormEvent<HTMLInputElement>) => void
+    changeChecked: () => void
+    onChangePassword: (e: React.FormEvent<HTMLInputElement>) => void
+    login: () => void
+    password: string
+    email: string
+    checked: boolean
 }
-return (
-		<div>
-			<div>
-				<div>it-incubator</div>
-				<div>Sign in</div>
-				<div><input onChange={onChangeLogin} value={login}/></div>
-				<div><input onChange={onChangePassword} value={password}/></div>
-				<div>Remember me<input type={"checkbox"} checked={checked} onClick={()=>setChecked(!checked)}/></div>
-				<div><NavLink to={PATH.RECOVERYPAGE}>Forgot password</NavLink></div>
-				<div><button onClick={()=>{dispatch(loginTC(login,password,checked))}}>login</button></div>
-				<div><NavLink to={PATH.REGISTRATIONPAGE}>Sign Up</NavLink></div>
-			</div>
+export const Login = (props: LoginPropsType) => {
 
-		</div>
-	)
+    return (
+        <div>
+            <div>
+                <div>it-incubator</div>
+                <div>Sign in</div>
+                <div>
+                    <SuperInputText placeholder={'Email'}
+                                    onChange={props.onChangeEmail}
+                                    value={props.email}/>
+                </div>
+                <div>
+                    <SuperInputText placeholder={'Password'}
+                                    onChange={props.onChangePassword}
+                                    value={props.password}/>
+
+                </div>
+                <div>Remember me
+                    <SuperCheckbox type={"checkbox"}
+                                   defaultChecked={props.checked}
+                                   onClick={props.changeChecked}/>
+                </div>
+                <div>
+                    <NavLink to={PATH.RECOVERYPAGE}>Forgot password</NavLink>
+                </div>
+                <div>
+                    <SuperButton onClick={props.login}>Login</SuperButton>
+                </div>
+                <div>
+                    <NavLink to={PATH.REGISTRATIONPAGE}>Sign Up</NavLink>
+                </div>
+            </div>
+        </div>)
 }
-
-

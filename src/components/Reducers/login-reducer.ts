@@ -1,5 +1,5 @@
 import {Dispatch} from "redux";
-import {apiLogin} from "../ApiRequests/apiForgot";
+import {apiLogin} from "../ApiRequests/apiLogin";
 
 type initialStateType = {
     isAuth: boolean
@@ -19,10 +19,10 @@ const initialState = {
 type ActionsType = setUserDataType | setLogoutType
 export const loginReducer = (state: initialStateType = initialState, action: ActionsType): initialStateType => {
     switch (action.type) {
-        case'SET-USER-DATA': {
+        case'login-reducer/SET-USER-DATA': {
             return {...state, ...action.data}
         }
-        case 'LOGOUT': {
+        case 'login-reducer/LOGOUT': {
             return {...state, ...action.data}
         }
         default:
@@ -32,14 +32,14 @@ export const loginReducer = (state: initialStateType = initialState, action: Act
 
 export const setUserData = (data: initialStateType) => {
     return {
-        type: 'SET-USER-DATA',
+        type: 'login-reducer/SET-USER-DATA',
         data
     } as const
 }
 type setUserDataType = ReturnType<typeof setUserData>
 const setLogout = () => {
     return {
-        type: 'LOGOUT',
+        type: 'login-reducer/LOGOUT',
         data: {
             isAuth: false,
             _id: null,
@@ -50,9 +50,10 @@ const setLogout = () => {
     } as const
 }
 type setLogoutType = ReturnType<typeof setLogout>
-export const loginTC = (email: string, password: string,rememberMe:boolean) => (dispatch: Dispatch) => {
+export const loginTC = (email: string, password: string, rememberMe: boolean) => (dispatch: Dispatch) => {
 
-    apiLogin.setLogin(email, password,rememberMe).then((res) => {
+    apiLogin.setLogin(email, password, rememberMe).then((res) => {
+        debugger
         const data = {
             isAuth: true,
             _id: res.data._id,
@@ -65,7 +66,7 @@ export const loginTC = (email: string, password: string,rememberMe:boolean) => (
 }
 export const logoutTC = () => (dispatch: Dispatch) => {
     apiLogin.logout().then(() => {
-        dispatch(setLogout())
+            dispatch(setLogout())
         }
     ).catch((err) => console.log(err))
 }
