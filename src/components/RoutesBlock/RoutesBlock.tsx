@@ -4,7 +4,7 @@ import {Error404} from "../Pages/ErrorPage/Error404";
 import {NewPass} from "../Pages/NewPassPage/NewPass";
 import {Profile} from "../Pages/ProfilePage/Profile";
 import {Recovery} from "../Pages/RecoveryPage/Recovery";
-import {Registration} from "../Pages/RegistPage/Regist";
+import {RegistrationContainer} from "../Pages/RegistPage/RegistContainer";
 import {Test} from "../Pages/TestPage/Test";
 import {Login} from "../Pages/LoginPage/Login";
 
@@ -26,7 +26,7 @@ export const RoutesBlock = () => {
         <Route path={PATH.NEWPASSPAGE} element={<NewPass/>}/>
         <Route path={PATH.PROFILEPAGE} element={<Profile/>}/>
         <Route path={PATH.RECOVERYPAGE} element={<Recovery/>}/>
-        <Route path={PATH.REGISTRATIONPAGE} element={<Registration/>}/>
+        <Route path={PATH.REGISTRATIONPAGE} element={<RegistrationContainer/>}/>
         <Route path={PATH.TESTPAGE} element={<Test/>}/>
         <Route path={'*'} element={<Error404/>}/>
       </Routes>
