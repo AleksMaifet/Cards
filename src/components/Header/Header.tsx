@@ -8,9 +8,9 @@ export const Header = () => {
 			<div style={{margin:'20px'}}>
 				<NavLink to={PATH.LOGINPAGE}>login</NavLink>
 			</div>
-			<div style={{margin:'20px'}}>
-				<NavLink to={PATH.NEWPASSPAGE}>newPass</NavLink>
-			</div>
+			{/*<div style={{margin:'20px'}}>*/}
+			{/*	<NavLink to={PATH.NEWPASSPAGE}>newPass</NavLink>*/}
+			{/*</div>*/}
 			<div style={{margin:'20px'}}>
 				<NavLink to={PATH.PROFILEPAGE}>profile</NavLink>
 			</div>
