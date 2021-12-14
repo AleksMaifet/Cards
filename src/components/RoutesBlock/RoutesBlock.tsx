@@ -32,7 +32,6 @@ export const RoutesBlock = () => {
         }/>
         <Route path={PATH.LOGINPAGE} element={<LoginContainer/>}/>
         <Route path={PATH.PROFILEPAGE} element={<Profile/>}/>
-        <Route path={PATH.RECOVERYPAGE} element={<Recovery/>}/>
         <Route path={PATH.REGISTRATIONPAGE} element={<RegistrationContainer/>}/>
         <Route path={PATH.RECOVERYPAGE} element={
           <ForgotPrivetRoute>
