@@ -7,7 +7,7 @@ type AxiosForgotPasswordType = {
 
 const initial = axios.create(
 	{
-		baseURL:'https://neko-back.herokuapp.com/2.0'
+		baseURL:'https://neko-back.herokuapp.com/2.0',
 	}
 )
 

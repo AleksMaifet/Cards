@@ -2,13 +2,14 @@ import React from 'react'
 import {Navigate, Route, Routes} from "react-router-dom";
 import {Error404} from "../Pages/ErrorPage/Error404";
 import {ForgotPass} from "../Pages/NewPassPage/ForgotPass";
+import { LoginContainer } from '../Pages/LoginPage/LoginContainer';
 import {Profile} from "../Pages/ProfilePage/Profile";
 import {Registration} from "../Pages/RegistPage/Regist";
 import {Test} from "../Pages/TestPage/Test";
-import {Login} from "../Pages/LoginPage/Login";
 import {Recovery} from "../Pages/RecoveryPage/Recovery";
 import {ForgotPrivetRoute} from "./PrivetRoutes/ForgotPrivetRoute";
 import {NewPasswordPrivetRoute} from "./PrivetRoutes/NewPasswordPrivetRoute";
+
 
 export const PATH = {
   LOGINPAGE: '/login',
@@ -24,12 +25,12 @@ export const RoutesBlock = () => {
     <div>
       <Routes>
         <Route path={'/'} element={<Navigate to={PATH.LOGINPAGE}/>}/>
-        <Route path={PATH.LOGINPAGE} element={<Login/>}/>
         <Route path={PATH.NEWPASSPAGE} element={
           <NewPasswordPrivetRoute>
             <ForgotPass/>
           </NewPasswordPrivetRoute>
         }/>
+        <Route path={PATH.LOGINPAGE} element={<LoginContainer/>}/>
         <Route path={PATH.PROFILEPAGE} element={<Profile/>}/>
         <Route path={PATH.RECOVERYPAGE} element={
           <ForgotPrivetRoute>
