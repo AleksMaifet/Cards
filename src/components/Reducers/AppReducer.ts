@@ -7,7 +7,7 @@ export const initState = {
 
 export const appReducer = (state = initState, action: AppHandlerType): initStateType => {
 	switch (action.type) {
-		case "ALL/IS-LOAD":
+		case "APP/IS-LOAD":
 			return {
 				...state,
 				...action.payload
@@ -22,7 +22,7 @@ export type AppHandlerType = ReturnType<typeof isLoadAC>
 
 export const isLoadAC = (isLoad: boolean) => {
 	return {
-		type: 'ALL/IS-LOAD',
+		type: 'APP/IS-LOAD',
 		payload: {
 			isLoad,
 		}
