@@ -3,10 +3,9 @@ import './App.css';
 import {Header} from "./components/Header/Header";
 import {RoutesBlock} from "./components/RoutesBlock/RoutesBlock";
 import {Load} from "./components/Pages/LoadPage/Load";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {AppStoreType} from "./components/store/store";
 import {apiLogin} from "./components/ApiRequests/apiLogin";
-import {useDispatch} from "react-redux";
 import {setUserData} from './components/Reducers/login-reducer';
 
 export const App = () => {
@@ -25,12 +24,12 @@ export const App = () => {
 
         })
     }, [dispatch])
-  return (
-    <div className="App">
-      <Header/>
-      {isLoad && <Load/>}
-      <RoutesBlock/>
-    </div>
-  );
+    return (
+      <div className="App">
+          <Header/>
+          {isLoad && <Load/>}
+          <RoutesBlock/>
+      </div>
+    );
 }
 

@@ -1,0 +1,47 @@
+.checkMailBlock {
+    width: 413px;
+    height: 468px;
+    left: 434px;
+    top: 126px;
+    background: #F9F9FE;
+    border-radius: 8px;
+}
+.checkMailImageBlock {
+    margin-top: 96px;
+}
+.checkMailContainer {
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    align-items: center;
+}
+.checkMailTextBlock {
+    display: flex;
+    justify-content: center;
+    margin-top: 21px;
+}
+.checkMailTitle {
+    width: 139px;
+    height: 33px;
+    left: 571px;
+    top: 354px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 33px;
+    text-align: right;
+    color: #2D2E46;
+}
+.checkMailText {
+    width: 328px;
+    height: 48px;
+    left: 476px;
+    top: 408px;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 24px;
+    text-align: center;
+    color: #2D2E46;
+    opacity: 0.7;
+}

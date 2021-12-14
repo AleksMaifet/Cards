@@ -11,7 +11,7 @@ export const ForgotPrivetRoute = ({children, ...rest}: PrivateRouterType) => {
 	const isRecovery = useSelector<AppStoreType, boolean>(state => state.forgot.isRecovery)
 
 	if (isRecovery) {
-		return <Navigate to='/test'/>
+		return <Navigate to='/check-mail'/>
 	}
 	return children
 }

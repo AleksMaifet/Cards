@@ -9,6 +9,7 @@ import {RegistrationContainer} from "../Pages/RegistPage/RegistContainer";
 import {Test} from "../Pages/TestPage/Test";
 import {ForgotPrivetRoute} from "./PrivetRoutes/ForgotPrivetRoute";
 import {NewPasswordPrivetRoute} from "./PrivetRoutes/NewPasswordPrivetRoute";
+import {CheckMail} from "../Pages/CheckMailPage/CheckMail";
 
 
 export const PATH = {
@@ -18,6 +19,7 @@ export const PATH = {
   RECOVERYPAGE: '/recovery',
   REGISTRATIONPAGE: '/regist',
   TESTPAGE: '/test',
+  CHECKMAIL:'/check-mail'
 }
 
 export const RoutesBlock = () => {
@@ -33,6 +35,7 @@ export const RoutesBlock = () => {
         <Route path={PATH.LOGINPAGE} element={<LoginContainer/>}/>
         <Route path={PATH.PROFILEPAGE} element={<Profile/>}/>
         <Route path={PATH.REGISTRATIONPAGE} element={<RegistrationContainer/>}/>
+        <Route path={PATH.CHECKMAIL} element={<CheckMail/>}/>
         <Route path={PATH.RECOVERYPAGE} element={
           <ForgotPrivetRoute>
             <Recovery/>
