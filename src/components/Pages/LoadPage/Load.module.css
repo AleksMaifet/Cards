@@ -1,0 +1,32 @@
+.nendovebKubscuponBlock {
+    display: flex;
+    justify-content: center;
+}
+.nendovebKubscupon {
+    width:350px;
+    height:100px;
+}
+.nendovebKubscupon h3 {
+    color:rgba(100,100,100,0.9);
+}
+.nendovebKubscupon .kacekagenProtsem {
+    width: 0;
+    height: 5px;
+    background: linear-gradient(to right,rgb(51, 253, 93),rgb(71, 185, 236),rgb(42, 147, 245),rgb(41, 168, 222),rgb(120, 56, 179),rgb(234, 34, 70));
+    margin-top: 10px;
+    background-size: 353px 5px;
+    border-radius: 12px;
+    animation: loading 6s ease-in-out forwards;
+}
+
+.nendovebKubscupon .akemobvous {
+    width: 100%;
+    height: 35px;
+    background: linear-gradient(to bottom,rgba(185, 173, 173, 0.17),rgba(97, 91, 91, 0.1),rgba(53, 51, 51, 0));
+    transform: skew(45deg) translate(15px,5px);
+}
+@keyframes loading {
+    to {
+        width:100%;
+    }
+}

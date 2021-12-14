@@ -7,7 +7,7 @@ import {Registration} from "../Pages/RegistPage/Regist";
 import {Test} from "../Pages/TestPage/Test";
 import {Login} from "../Pages/LoginPage/Login";
 import {Recovery} from "../Pages/RecoveryPage/Recovery";
-import {ForgotPrivetRoute} from "./PrivetRoutes/ForgoPrivetRoute";
+import {ForgotPrivetRoute} from "./PrivetRoutes/ForgotPrivetRoute";
 import {NewPasswordPrivetRoute} from "./PrivetRoutes/NewPasswordPrivetRoute";
 
 export const PATH = {
