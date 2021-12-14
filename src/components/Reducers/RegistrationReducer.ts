@@ -36,6 +36,6 @@ export const registrationTC = (email: string, password: string) => {
 		registerUser(email, password)
 			.then(res => dispatch(setRegisteredSuccessfull()))
 			.catch(err => dispatch(setNotRegistered()))
-			.finally(() => dispatch(isLoadAC(true)))
+			.finally(() => dispatch(isLoadAC(false)))
 	}
 }
