@@ -14,7 +14,7 @@ export const registrationReducer = (state = initState , action: ActionsType): in
         case "registration/SET-REGISTERED-SUCCESSFULL":
             return {...state, isRegistered: true}
         case "registration/SET-NOT-REGISTERED":
-            return {...state, error: "Email or password are invailid. Please, try registration again"}
+            return {...state, error: action.error}
         default:
             return state
     }
@@ -24,15 +24,16 @@ export const setRegisteredSuccessfull = () => {
         type: "registration/SET-REGISTERED-SUCCESSFULL",
     } as const
 }
-export const setNotRegistered = () => {
+export const setNotRegistered = (error: string) => {
     return {
-        type: "registration/SET-NOT-REGISTERED"
+        type: "registration/SET-NOT-REGISTERED",
+        error,
     } as const
 }
 export const registrationTC = (email: string, password: string) => {
     return (dispatch: Dispatch) => {
         registerUser(email, password)
             .then(res => dispatch(setRegisteredSuccessfull()))
-            .catch(err => dispatch(setNotRegistered()))
+            .catch(err => dispatch(setNotRegistered("Email or password are invailid. Please, try registration again")))
     }
 }
