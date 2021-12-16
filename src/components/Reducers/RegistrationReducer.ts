@@ -32,10 +32,10 @@ export const setNotRegistered = () => {
 }
 export const registrationTC = (email: string, password: string) => {
 	return (dispatch: Dispatch) => {
-		dispatch(isLoadAC(true))
+		dispatch(isLoadAC('loading'))
 		registerUser(email, password)
 			.then(res => dispatch(setRegisteredSuccessfull()))
 			.catch(err => dispatch(setNotRegistered()))
-			.finally(() => dispatch(isLoadAC(false)))
+			.finally(() => dispatch(isLoadAC('success')))
 	}
 }

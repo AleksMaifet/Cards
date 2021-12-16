@@ -1,5 +1,5 @@
-import React, {useCallback, useState} from 'react'
-import {BlockForgot} from "./blockForgot";
+import React, {FormEvent, useCallback, useState} from 'react'
+import {BlockRecovery} from "./BlockRecovery";
 import {useDispatch} from "react-redux";
 import {forgotPasswordTC} from "../../Reducers/ForgotReducer";
 
@@ -8,24 +8,16 @@ export const Recovery = () => {
 	const [value,setValue] = useState<string>('')
 	const [typeInput,setTypeInput] = useState<'text' | 'password'>('text')
 
-	const submitForgotValueHandler = useCallback(() => {
+	const submitForgotValueHandler = useCallback((e:FormEvent<HTMLFormElement>) => {
 		dispatch(forgotPasswordTC(value))
+		e.preventDefault()
 		setValue('')
 	},[dispatch,value])
-
-	const onKeyPressHandler = () => {
-			submitForgotValueHandler()
-	}
-
-	const changeVisibility = () => {
-		typeInput === 'text' ? setTypeInput('password') : setTypeInput('text')
-	}
 
 	return (
 		<div>
 			<div>
-				<BlockForgot typeInput={typeInput} onKeyPressHandler={onKeyPressHandler} submitValueHandler={submitForgotValueHandler} setValue={setValue} inputValue={value}/>
-				<span onClick={changeVisibility} style={{cursor:'pointer'}} >change type</span>
+				<BlockRecovery typeInput={typeInput} submitValueHandler={submitForgotValueHandler} setValue={setValue} inputValue={value}/>
 			</div>
 		</div>
 	)

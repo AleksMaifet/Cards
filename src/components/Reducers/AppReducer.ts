@@ -1,7 +1,11 @@
-export type initStateType = typeof initState
+export type IsLoadType = 'idle' | 'loading' | 'success';
 
-export const initState = {
-	isLoad: false
+export type initStateType = {
+	isLoad:IsLoadType
+}
+
+const initState:initStateType = {
+	isLoad: 'idle',
 }
 
 
@@ -10,7 +14,7 @@ export const appReducer = (state = initState, action: AppHandlerType): initState
 		case "APP/IS-LOAD":
 			return {
 				...state,
-				...action.payload
+				...action.payload,
 			}
 		default:
 			return state
@@ -20,7 +24,7 @@ export const appReducer = (state = initState, action: AppHandlerType): initState
 export type AppHandlerType = ReturnType<typeof isLoadAC>
 
 
-export const isLoadAC = (isLoad: boolean) => {
+export const isLoadAC = (isLoad: IsLoadType) => {
 	return {
 		type: 'APP/IS-LOAD',
 		payload: {

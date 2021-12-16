@@ -52,7 +52,7 @@ const setLogout = () => {
 }
 type setLogoutType = ReturnType<typeof setLogout>
 export const loginTC = (email: string, password: string, rememberMe: boolean) => (dispatch: Dispatch) => {
-	dispatch(isLoadAC(true))
+	dispatch(isLoadAC('loading'))
 	apiLogin.setLogin(email, password, rememberMe).then((res) => {
 		const data = {
 			isAuth: true,
@@ -63,13 +63,13 @@ export const loginTC = (email: string, password: string, rememberMe: boolean) =>
 		}
 		dispatch(setUserData(data))
 	}).catch((err) => console.log(err))
-		.finally(() => dispatch(isLoadAC(false)))
+		.finally(() => dispatch(isLoadAC('success')))
 }
 export const logoutTC = () => (dispatch: Dispatch) => {
-	dispatch(isLoadAC(true))
+	dispatch(isLoadAC('loading'))
 	apiLogin.logout().then(() => {
 			dispatch(setLogout())
 		}
 	).catch((err) => console.log(err))
-		.finally(() => dispatch(isLoadAC(false)))
+		.finally(() => dispatch(isLoadAC('success')))
 }

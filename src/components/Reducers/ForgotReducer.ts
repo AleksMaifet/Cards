@@ -7,6 +7,7 @@ export type initStateType = typeof initState
 export const initState = {
 	isRecovery: false,
 	newPass:false,
+	emailRecovery:'',
 }
 
 
@@ -18,19 +19,33 @@ export const forgotReducer = (state = initState, action: ForgotPasswordHandler):
 				...state,
 				...action.payload
 			}
+		case "FORGOT/EMAIL-RECOVERY":
+			return {
+				...state,
+				emailRecovery: action.payload.email
+			}
 		default:
 			return state
 	}
 }
 
 
-export type ForgotPasswordHandler = ReturnType<typeof forgotPasswordAC> | ReturnType<typeof newPasswordAC>
+export type ForgotPasswordHandler = ReturnType<typeof forgotPasswordAC> | ReturnType<typeof newPasswordAC> | ReturnType<typeof emailRecoveryAC>
 
 export const forgotPasswordAC = (isRecovery:boolean) => {
 	return {
 		type:'FORGOT/CHANGE-RECOVERY-STATUS',
 		payload:{
 			isRecovery
+		},
+	} as const
+}
+
+export const emailRecoveryAC = (email:string) => {
+	return {
+		type:'FORGOT/EMAIL-RECOVERY',
+		payload:{
+			email
 		},
 	} as const
 }
@@ -46,36 +61,31 @@ export const newPasswordAC = (newPass:boolean) => {
 
 export const forgotPasswordTC = (email: string) => {
 	return async (dispatch: Dispatch) => {
-		dispatch(isLoadAC(true))
+		dispatch(isLoadAC('loading'))
 		try {
-			const {data:{success}} = await cardsForgotAPI.forgotPassword(email)
-			if(success){
-				dispatch(forgotPasswordAC(success))
-			}
-		}
-		catch (e:any){
-			alert(e.response.data.error)
-		}
-		finally {
-			dispatch(isLoadAC(false))
+			const {data: {success}} = await cardsForgotAPI.forgotPassword(email)
+			dispatch(forgotPasswordAC(success))
+			dispatch(emailRecoveryAC(email))
+		} catch (err:any) {
+			const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
+			alert(errorMassage)
+		} finally {
+			dispatch(isLoadAC('success'))
 		}
 	}
 }
 
-export const newPasswordTC = (newPass:string,tokenId:string | undefined) => {
+export const newPasswordTC = (newPass: string, tokenId: string | undefined) => {
 	return async (dispatch: Dispatch) => {
-		dispatch(isLoadAC(true))
+		dispatch(isLoadAC('loading'))
 		try {
-			const {status} = await cardsForgotAPI.setNewPassword(newPass,tokenId)
-			if(status < 400){
-				dispatch(newPasswordAC(true))
-			}
-		}
-		catch (e:any){
-			alert(e.response.data.error)
-		}
-		finally {
-			dispatch(isLoadAC(false))
+			await cardsForgotAPI.setNewPassword(newPass, tokenId)
+			dispatch(newPasswordAC(true))
+		} catch (err: any) {
+			const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
+			alert(errorMassage)
+		} finally {
+			dispatch(isLoadAC('success'))
 		}
 	}
 }

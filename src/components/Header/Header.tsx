@@ -18,9 +18,6 @@ export const Header = () => {
 			<div style={{margin: '20px'}}>
 				<NavLink to={PATH.REGISTRATIONPAGE}>registration</NavLink>
 			</div>
-			<div style={{margin: '20px'}}>
-				<NavLink to={PATH.TESTPAGE}>test</NavLink>
-			</div>
 		</div>
 	)
 }
