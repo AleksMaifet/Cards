@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from "axios";
-type ResponseLoginType = {
+export type ResponseLoginType = {
     avatar?: string;
     created: Date
     email: string
@@ -13,6 +13,11 @@ type ResponseLoginType = {
     verified: boolean
     __v: number
     _id: string
+}
+type ResponseUpdateType = {
+    token:string
+    tokenDeathTime:number
+    updatedUser:ResponseLoginType
 }
 type ResponseDeleteMeType = {
     info: string;
@@ -41,5 +46,11 @@ export const apiLogin = {
     me() {
         return initial.post<ResponseLoginType>('auth/me')
     },
+}
+
+export const apiUpdate = {
+    me(avatar:string | ArrayBuffer | null){
+        return initial.put<ResponseUpdateType>('auth/me',{avatar:avatar},{})
+    }
 }
 

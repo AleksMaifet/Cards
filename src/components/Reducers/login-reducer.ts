@@ -1,5 +1,5 @@
 import {Dispatch} from "redux";
-import {apiLogin} from "../ApiRequests/apiLogin";
+import {apiLogin, apiUpdate, ResponseLoginType} from "../ApiRequests/apiLogin";
 import {isLoadAC} from "./AppReducer";
 
 type initialStateType = {
@@ -17,7 +17,7 @@ const initialState = {
 	name: null,
 	avatar: null,
 }
-type ActionsType = setUserDataType | setLogoutType
+type ActionsType = setUserDataType | setLogoutType | updateUserACType
 export const loginReducer = (state: initialStateType = initialState, action: ActionsType): initialStateType => {
 	switch (action.type) {
 		case'login-reducer/SET-USER-DATA': {
@@ -26,6 +26,9 @@ export const loginReducer = (state: initialStateType = initialState, action: Act
 		case 'login-reducer/LOGOUT': {
 			return {...state, ...action.data}
 		}
+		case "login-reducer/UPDATE-USER":
+			return {...state,
+			...action.updatedData}
 		default:
 			return state
 	}
@@ -50,6 +53,14 @@ const setLogout = () => {
 		}
 	} as const
 }
+type updateUserACType = ReturnType<typeof updateUserAC>
+export const updateUserAC = (updatedData:ResponseLoginType) => {
+	return {
+		type: 'login-reducer/UPDATE-USER',
+		updatedData
+	} as const
+}
+
 type setLogoutType = ReturnType<typeof setLogout>
 export const loginTC = (email: string, password: string, rememberMe: boolean) => (dispatch: Dispatch) => {
 	dispatch(isLoadAC('loading'))
@@ -72,4 +83,11 @@ export const logoutTC = () => (dispatch: Dispatch) => {
 		}
 	).catch((err) => console.log(err))
 		.finally(() => dispatch(isLoadAC('success')))
+}
+
+export const updateAvatarTC = (avatar:string | ArrayBuffer | null) => async (dispatch: Dispatch) => {
+	dispatch(isLoadAC('loading'))
+	const {data:{updatedUser}} = await apiUpdate.me(avatar)
+	dispatch(updateUserAC(updatedUser))
+		dispatch(isLoadAC('success'))
 }
