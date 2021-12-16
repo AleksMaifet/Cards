@@ -1,4 +1,8 @@
 import React, {ChangeEvent} from "react";
+import SuperInputText from "../../../superComponents/c1-SuperInputText/SuperInputText";
+import SuperButton from "../../../superComponents/c2-SuperButton/SuperButton";
+import s from './../Registration.module.css'
+import c from '../../../../styleComponents/App.module.css'
 
 type RegistrationPropsType = {
     changeEmail: (e: ChangeEvent<HTMLInputElement>) => void
@@ -21,23 +25,29 @@ export const Registration = ({
                                  confirmedPassword
                              }: RegistrationPropsType) => {
     return (
-        <div>RegistrationPage
-            <div>
-                <input onChange={changeEmail} value={email} placeholder={"Login"}/>
+        <div className={c.container}>
+          <div className={s.registrationBlock}>
+            <div className={s.blockCenter}>
+              <h3 className={s.registrationTitle}>
+                Sign Up
+              </h3>
             </div>
             <div>
-                <input onChange={changePassword} value={password} type={"password"} placeholder={"Password"}/>
+                <SuperInputText onChange={changeEmail} value={email} placeholder={"Login"}/>
             </div>
             <div>
-                <input onChange={changeConfirmedPassword} value={confirmedPassword} type={"password"} placeholder={"Confirm password"}/>
+                <SuperInputText onChange={changePassword} value={password} type={"password"} placeholder={"Password"}/>
+            </div>
+            <div>
+                <SuperInputText onChange={changeConfirmedPassword} value={confirmedPassword} type={"password"} placeholder={"Confirm password"}/>
             </div>
             <div>
                 <span>{error}</span>
             </div>
             <div>
-                <button onClick={fetchData}>Register!</button>
+                <SuperButton onClick={fetchData}>Register!</SuperButton>
             </div>
-
+        </div>
         </div>
     )
 }

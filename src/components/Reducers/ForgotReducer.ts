@@ -82,7 +82,7 @@ export const newPasswordTC = (newPass: string, tokenId: string | undefined) => {
 			await cardsForgotAPI.setNewPassword(newPass, tokenId)
 			dispatch(newPasswordAC(true))
 		} catch (err: any) {
-			const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
+			const errorMassage = err.response ? err.response.data.error : err.messages + ' Check internet connection!'
 			alert(errorMassage)
 		} finally {
 			dispatch(isLoadAC('success'))
