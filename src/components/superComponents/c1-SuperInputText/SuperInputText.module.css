@@ -1,28 +1,12 @@
-/*.superInput {*/
-/*    border: 3px solid chocolate;*/
-/*    background: white;*/
-/*}*/
-/*.input:focus {*/
-/*    outline: none;*/
-/*}*/
-
-.errorInput {
-    border: 3px solid lime;
-    background: red;
-}
-
-.error {
-    color: red;
-}
-
-.superInput{
-    position: relative;
-    border: 3px solid black;
-    display: inline;
-    border-radius: 5rem;
+.superInput {
+    border: 0;
+    border-bottom: 1px solid #24254A;
     outline: none;
-    color:blue;
-    font-size: 16px;
-    padding-left: 9px;
+    width: 350px;
+    color: #000000;
+    height: 30px;
+    font-size: 20px;
+    padding-right: 35px;
+    background-color: ghostwhite;
 }
 

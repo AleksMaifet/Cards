@@ -4,13 +4,17 @@
 body {
   min-height: 100vh;
   background: linear-gradient(180deg, #E6D4DE 0%, #9890C7 100%);
+  margin-right: calc(-1 * (100vw - 100%));
+  overflow-x: hidden;
 }
 
 a {
   text-decoration: none;
-}
-a:hover {
-  border-bottom: 1px solid black;
+  color:#21268F;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
 }
 
 .App-header {
@@ -23,3 +27,4 @@ a:hover {
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
