@@ -87,7 +87,15 @@ export const logoutTC = () => (dispatch: Dispatch) => {
 
 export const updateAvatarTC = (avatar:string | ArrayBuffer | null) => async (dispatch: Dispatch) => {
 	dispatch(isLoadAC('loading'))
-	const {data:{updatedUser}} = await apiUpdate.me(avatar)
-	dispatch(updateUserAC(updatedUser))
+	try {
+		const {data:{updatedUser}} = await apiUpdate.me(avatar)
+		dispatch(updateUserAC(updatedUser))
+	}
+	catch (err:any){
+		const errorMassage = err.response ? err.response.data.error : err.messages + ' Check internet connection!'
+		alert(errorMassage)
+	}
+	finally {
 		dispatch(isLoadAC('success'))
+	}
 }
