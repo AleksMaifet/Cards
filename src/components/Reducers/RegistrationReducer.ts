@@ -1,5 +1,6 @@
 import {Dispatch} from "redux";
 import {registerUser} from "../ApiRequests/registApi";
+import {isLoadAC} from "./AppReducer";
 
 export type initRegistStateType = typeof initState
 
@@ -8,6 +9,7 @@ export const initState = {
     error: ""
 }
 type ActionsType = ReturnType<typeof setRegisteredSuccessfull> | ReturnType<typeof setNotRegistered>
+
 
 export const registrationReducer = (state = initState , action: ActionsType): initRegistStateType => {
     switch (action.type) {
@@ -31,9 +33,11 @@ export const setNotRegistered = (error: string) => {
     } as const
 }
 export const registrationTC = (email: string, password: string) => {
-    return (dispatch: Dispatch) => {
-        registerUser(email, password)
-            .then(res => dispatch(setRegisteredSuccessfull()))
-            .catch(err => dispatch(setNotRegistered("Email or password are invailid. Please, try registration again")))
-    }
+	return (dispatch: Dispatch) => {
+		dispatch(isLoadAC(true))
+		registerUser(email, password)
+			.then(res => dispatch(setRegisteredSuccessfull()))
+			.catch(err => dispatch(setNotRegistered("Email or password are invailid. Please, try registration again")))
+			.finally(() => dispatch(isLoadAC(false)))
+	}
 }

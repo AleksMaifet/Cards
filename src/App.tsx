@@ -1,14 +1,35 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 import {Header} from "./components/Header/Header";
 import {RoutesBlock} from "./components/RoutesBlock/RoutesBlock";
+import {Load} from "./components/Pages/LoadPage/Load";
+import {useDispatch, useSelector} from "react-redux";
+import {AppStoreType} from "./components/store/store";
+import {apiLogin} from "./components/ApiRequests/apiLogin";
+import {setUserData} from './components/Reducers/login-reducer';
 
 export const App = () => {
-  return (
-    <div className="App">
-      <Header/>
-      <RoutesBlock/>
-    </div>
-  );
+	const isLoad = useSelector<AppStoreType, boolean>(state => state.app.isLoad)
+    const dispatch = useDispatch()
+    useEffect(() => {
+        apiLogin.me().then((res) => {
+            const data = {
+                isAuth: true,
+                _id: res.data._id,
+                email: res.data.email,
+                name: res.data.name,
+                avatar: (res.data.avatar ? res.data.avatar : null),
+            }
+            dispatch(setUserData(data))
+
+        })
+    }, [dispatch])
+    return (
+      <div className="App">
+          <Header/>
+          {isLoad && <Load/>}
+          <RoutesBlock/>
+      </div>
+    );
 }
 
