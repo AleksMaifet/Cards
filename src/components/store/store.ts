@@ -9,6 +9,7 @@ import {cardsReducer} from "../Reducers/CardsReducer";
 import {searchByReducer} from "../Reducers/SearchByReducer";
 import {sortByReducer} from "../Reducers/SortByReducer";
 import {paginationReducer} from "../Reducers/PaginationReducer";
+import {rangeReducer} from "../Reducers/RangeReducer";
 
 const reducers = combineReducers({
 	app: appReducer,
@@ -20,6 +21,7 @@ const reducers = combineReducers({
 	searchBy: searchByReducer,
 	sortBy: sortByReducer,
 	pagination: paginationReducer,
+	range: rangeReducer,
 })
 
 export const store = createStore(reducers,applyMiddleware(thunk))

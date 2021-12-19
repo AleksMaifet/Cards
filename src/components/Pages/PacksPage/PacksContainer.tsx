@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import s from "./Packs.module.css"
 import {useDispatch, useSelector} from "react-redux";
 import {AppStoreType} from "../../store/store";
@@ -15,6 +15,10 @@ import {
 import {packsAndCardsPaginationType, setPacksPageCount, setPacksPageNumber} from "../../Reducers/PaginationReducer";
 import {PaginationComponent} from "../../superComponents/PaginationComponent/PaginationComponent";
 import SuperSelect from "../../superComponents/c5-SuperSelect/SuperSelect";
+import SuperDoubleRange from "../../superComponents/c8-SuperDoubleRange/SuperDoubleRange";
+import {rangeReducerStateType, setMaxUserValue, setMinUserValue} from "../../Reducers/RangeReducer";
+import {PATH} from "../../RoutesBlock/RoutesBlock";
+import {NavLink} from "react-router-dom";
 
 
 export const Packs = () => {
@@ -22,6 +26,9 @@ export const Packs = () => {
     const searchByValue = useSelector<AppStoreType, string>(state => state.searchBy.searchByPacks)
     const packsPagination = useSelector<AppStoreType, packsAndCardsPaginationType>(state => state.pagination.packs)
     const {totalCount, pageCount, pageNumber} = packsPagination;
+
+    const rangeState = useSelector<AppStoreType, rangeReducerStateType>(state => state.range)
+    const {minServer, maxServer, minUser, maxUser} = rangeState
 
     const dispatch = useDispatch()
 
@@ -56,32 +63,56 @@ export const Packs = () => {
     const renderedPacks = packs.map(item => {
         return (
             <div className={s.divTableRow}>
-                <div className={s.divTableCol}>{item.name}</div>
+                <div className={s.divTableCol}><NavLink to={PATH.CARDS}>{item.name}</NavLink></div>
                 <div className={s.divTableCol}>{item.cardsCount}</div>
                 <div className={s.divTableCol}>{item.updated}</div>
                 <div className={s.divTableCol}>{item.user_id}</div>
-                <div className={s.divTableCol}><SuperButton onClick={()=>{onDeletePackHandler(item._id)}}>Delete</SuperButton></div>
+                <div className={s.divTableCol}><SuperButton onClick={() => {
+                    onDeletePackHandler(item._id)
+                }}>Delete</SuperButton></div>
             </div>
         )
     })
+    const [value1, setValue1] = useState(0)
+    const [value2, setValue2] = useState(100)
+    const onLeftChangeRange = (value: number) => {
+        dispatch(setMinUserValue(value))
+    }
+    const onRightChangeRange = (value: number) => {
+        dispatch(setMaxUserValue(value))
+    }
     return (
         <div>
-            <SuperInputText value={searchByValue} onChangeText={onSearchChange}/><SuperButton
-            onClick={onCClickChange}>Search</SuperButton>
+            <div className={s.settings}>
+                <SuperDoubleRange min={minServer}
+                                  max={maxServer}
+                                  value={[minUser, maxUser]}
+                                  onLeftChangeRange={onLeftChangeRange}
+                                  onRightChangeRange={onRightChangeRange}
+                />
+                <div>
+                    <SuperInputText value={searchByValue} onChangeText={onSearchChange}/><SuperButton
+                    onClick={onCClickChange}>Search</SuperButton>
+                </div>
+            </div>
+
             <div className={s.divTable}>
                 <div className={s.divTableRow}>
                     <div className={s.divTableCol}>Name</div>
-                    <div className={s.divTableCol}>Cards count<SortingComponent onSortChange={onCardsAmountSortChange}/>
+                    <div className={s.divTableCol}>Cards count<SortingComponent
+                        onSortChange={onCardsAmountSortChange}/>
                     </div>
                     <div className={s.divTableCol}>Updated<SortingComponent onSortChange={onLastUpdateSortChange}/>
                     </div>
-                    <div className={s.divTableCol}>Created By<SortingComponent onSortChange={onCreatedBySortChange}/>
+                    <div className={s.divTableCol}>Created By<SortingComponent
+                        onSortChange={onCreatedBySortChange}/>
                     </div>
                     <div className={s.divTableCol}>Actions</div>
                 </div>
                 {renderedPacks}
                 <SuperButton onClick={onAddPackHandler}>Add pack</SuperButton>
             </div>
+
             <div>
                 <SuperSelect options={[pageCount, 10, 15, 20]} onChangeOption={onPageCountChange}/>
                 <PaginationComponent totalCount={totalCount} pageCount={pageCount} currentPage={pageNumber}

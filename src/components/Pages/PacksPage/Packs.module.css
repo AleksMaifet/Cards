@@ -16,3 +16,8 @@
     width: 200px;
     background-color: #ccc;
 }
+.settings{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
