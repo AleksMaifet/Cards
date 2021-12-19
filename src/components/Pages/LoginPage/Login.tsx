@@ -30,19 +30,22 @@ export const Login = (props: LoginPropsType) => {
 				<div>
 					<SuperInputText placeholder={'Email'}
 													onChange={props.onChangeEmail}
-													value={props.email}/>
+													value={props.email}
+					/>
 				</div>
 				<div className={s.loginInputsBlock}>
 					<SuperInputText placeholder={'Password'}
 													onChange={props.onChangePassword}
-													value={props.password}/>
+													value={props.password}
+					/>
 				</div>
 
 				<div className={s.blockCheck}>
 					Remember me
 					<SuperCheckbox type={"checkbox"}
 												 defaultChecked={props.checked}
-												 onClick={props.changeChecked}/>
+												 onClick={props.changeChecked}
+					/>
 				</div>
 				<div className={s.blockForgotPass}>
 					<NavLink to={PATH.RECOVERYPAGE}>Forgot password</NavLink>

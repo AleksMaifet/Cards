@@ -24,30 +24,13 @@ export type SortByInitStateType = {
     cards: sortCardsType
 }
 
-type ActionsType = ReturnType<typeof sortPackCardsAmountAC>
-    | ReturnType<typeof sortPackLastUpdateAC>
+type ActionsType =
     | ReturnType<typeof sortPackCreatedByAC>
     | ReturnType<typeof sortCardsLastUpdateAC>
     | ReturnType<typeof sortCardsGradeAC>
 
 export const sortByReducer = (state: SortByInitStateType = SortByReducerInitState, action: ActionsType) => {
     switch (action.type) {
-        case "sortBy/CHANGE-PACK-CARDS-AMOUNT":
-            return {
-                ...state,
-                packs: {
-                    ...state.packs,
-                    cardsAmount: action.rate
-                }
-            }
-        case "sortBy/CHANGE-PACK-LAST-UPDATE":
-            return {
-                ...state,
-                packs: {
-                    ...state.packs,
-                    lastUpdate: action.rate
-                }
-            }
         case "sortBy/CHANGE-PACK-CREATED-BY":
             return {
                 ...state,
@@ -77,18 +60,6 @@ export const sortByReducer = (state: SortByInitStateType = SortByReducerInitStat
     }
 }
 
-export const sortPackCardsAmountAC = (rate: number) => {
-    return {
-        type: "sortBy/CHANGE-PACK-CARDS-AMOUNT",
-        rate,
-    } as const
-}
-export const sortPackLastUpdateAC = (rate: number) => {
-    return {
-        type: "sortBy/CHANGE-PACK-LAST-UPDATE",
-        rate,
-    } as const
-}
 export const sortPackCreatedByAC = (rate: number) => {
     return {
         type: "sortBy/CHANGE-PACK-CREATED-BY",

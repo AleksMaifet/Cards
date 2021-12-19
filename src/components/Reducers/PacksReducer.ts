@@ -1,73 +1,181 @@
-export type packType = {
-    _id: string
-    user_id: string
-    name: string
-    path: string
-    cardsCount: number
-    grade: number
-    shots: number
-    rating: number
-    type: string
-    created: string
-    updated: string
-}
+import {Dispatch} from "redux";
+import {apiPacks, PacksType, ResponseGetPacksType} from "../ApiRequests/apiPacks";
+import {AppHandlerType, isLoadAC} from "./AppReducer";
+import {AppStoreType} from "../store/store";
+import {ThunkDispatch} from "redux-thunk";
+
 export const PacksInitState = {
-    cardPacks: [
-        {
-            _id: "someID1", user_id: "someUserID", name: "no Name", path: "/del", cardsCount: 25,
-            grade: 0, shots: 0, rating: 0, type: "pack", created: "2020", updated: "2020",
-            __v: 0
-        },
-        {
-            _id: "someID2", user_id: "someUserID", name: "no Name", path: "/del", cardsCount: 25,
-            grade: 0, shots: 0, rating: 0, type: "pack", created: "2020", updated: "2020",
-            __v: 0
-        },
-        {
-            _id: "someID3", user_id: "someUserID", name: "no Name", path: "/del", cardsCount: 25,
-            grade: 0, shots: 0, rating: 0, type: "pack", created: "2020", updated: "2020",
-            __v: 0
-        },
-    ],
-    cardPacksTotalCount: 14,
-    maxCardsCount: 25,
-    minCardsCount: 4,
-    page: 1,
-    pageCount: 4
+	cardPacks: [] as PacksType[],
+	cardPacksTotalCount: 0,
+	maxCardsCount: 25,
+	minCardsCount: 4,
+	page: 1,
+	pageCount: 5,
+	lastUpdate: 0,
+	cardsAmount: 0,
+	whoisCard:'',
+	searchByPacks:'',
+	newPack:'',
 }
 type PacksInitStateType = typeof PacksInitState
-type ActionsType = ReturnType<typeof addPackAC> | ReturnType<typeof deletePackAC>
-export const packsReducer = (state: PacksInitStateType = PacksInitState, action: ActionsType) => {
-    switch (action.type) {
-        case "packs/ADD-PACK":
-            return {
-                ...state,
-                cardPacks: [
-                    ...state.cardPacks,
-                    {
-                        _id: "someID3" + new Date().toString(), user_id: "someUserID", name: "no Name", path: "/del", cardsCount: 25,
-                        grade: 0, shots: 0, rating: 0, type: "pack", created: "2020", updated: "2020",
-                        __v: 0
-                    },
-                ]
-            }
-        case "packs/DELETE-PACK":
-            return {
-                ...state,
-                cardPacks: state.cardPacks.filter(i => i._id != action.id),
-            }
-        default:
-            return state;
-    }
+type ActionsType =
+	| ReturnType<typeof deletePackAC>
+	| ReturnType<typeof setPackAC>
+	| ReturnType<typeof setPacksPageCount>
+	| ReturnType<typeof setPacksPageNumber>
+	| ReturnType<typeof sortPacksLastUpdateAC>
+	| ReturnType<typeof sortPackCardsAmountAC>
+	| ReturnType<typeof changeWhoisCardAC>
+	| ReturnType<typeof searchByPacksAC>
+
+
+export const packsReducer = (state = PacksInitState, action: ActionsType): PacksInitStateType => {
+	switch (action.type) {
+		case "Packs/SET-PACK":
+			return {
+				...state,
+				...action.data
+			}
+		case "Packs/SET-PACKS-PAGE-NUMBER":
+		case "Packs/SET-PACKS-PAGE-COUNT":
+		case "Packs/CHANGE-PACK-CARDS-AMOUNT":
+		case "Packs/CHANGE-PACKS-LAST-UPDATE":
+		case "Packs/WHO-SET-PACKS":
+		case "Packs/SEARCH-PACKS":
+			return {
+				...state,
+				...action.payload
+			}
+		default:
+			return state;
+	}
 }
-export const addPackAC = () => {
-    return {
-        type: "packs/ADD-PACK",
-    } as const
+
+export const setPackAC = (data: ResponseGetPacksType) => {
+	return {
+		type: "Packs/SET-PACK",
+		data,
+	} as const
 }
+
 export const deletePackAC = (id: string) => {
-    return {
-        type: "packs/DELETE-PACK",
-        id,
-    } as const
+	return {
+		type: "Packs/DELETE-PACK",
+		id,
+	} as const
+}
+
+export const sortPackCardsAmountAC = (cardsAmount: number) => {
+	return {
+		type: "Packs/CHANGE-PACK-CARDS-AMOUNT",
+		payload: {
+			cardsAmount
+		},
+	} as const
+}
+
+export const sortPacksLastUpdateAC = (lastUpdate: number) => {
+	return {
+		type: "Packs/CHANGE-PACKS-LAST-UPDATE",
+		payload: {
+			lastUpdate
+		},
+	} as const
+}
+
+export const searchByPacksAC = (searchByPacks: string) => {
+	return {
+		type: "Packs/SEARCH-PACKS",
+		payload:{
+			searchByPacks
+		}
+	} as const
+}
+
+export const setPacksPageCount = (pageCount: number) => {
+	return {
+		type: "Packs/SET-PACKS-PAGE-COUNT",
+		payload: {
+			pageCount,
+		}
+	} as const
+}
+export const setPacksPageNumber = (page: number) => {
+	return {
+		type: "Packs/SET-PACKS-PAGE-NUMBER",
+		payload: {
+			page
+		},
+	} as const
+}
+export const changeWhoisCardAC = (whoisCard: string) => {
+	return {
+		type: "Packs/WHO-SET-PACKS",
+		payload: {
+			whoisCard
+		},
+	} as const
+}
+
+export const setCardTC = () => async (dispatch: Dispatch,getState:() => AppStoreType) => {
+	const packsData = getState().packs
+	dispatch(isLoadAC('loading'))
+	try {
+		const {data} = await apiPacks.getPacks(
+			packsData.page,
+			packsData.pageCount,
+			packsData.lastUpdate,
+			packsData.whoisCard,
+			packsData.searchByPacks,
+		)
+		dispatch(setPackAC(data))
+	} catch (err:any) {
+      const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
+      alert(errorMassage)
+	}
+	finally {
+		dispatch(isLoadAC('success'))
+	}
+}
+
+export const addPackTC = (newPackTitle:string) => async (dispatch: ThunkDispatch<AppStoreType, void, ActionsType | AppHandlerType>) => {
+	dispatch(isLoadAC('loading'))
+	try {
+		await apiPacks.postPack(newPackTitle)
+		dispatch(setCardTC())
+	} catch (err:any) {
+		const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
+		alert(errorMassage)
+	}
+	finally {
+		dispatch(isLoadAC('success'))
+	}
+}
+
+export const deletePackTC = (id:string) => async (dispatch: ThunkDispatch<AppStoreType, void, ActionsType | AppHandlerType>) => {
+	dispatch(isLoadAC('loading'))
+	try {
+		await apiPacks.deletePack(id)
+		dispatch(setCardTC())
+	} catch (err:any) {
+		const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
+		alert(errorMassage)
+	}
+	finally {
+		dispatch(isLoadAC('success'))
+	}
+}
+
+export const updatePackTC = (id:string,title:string) => async (dispatch: ThunkDispatch<AppStoreType, void, ActionsType | AppHandlerType>) => {
+	dispatch(isLoadAC('loading'))
+	try {
+		await apiPacks.updatePack(id,title)
+		dispatch(setCardTC())
+	} catch (err:any) {
+		const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
+		alert(errorMassage)
+	}
+	finally {
+		dispatch(isLoadAC('success'))
+	}
 }

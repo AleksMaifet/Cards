@@ -1,12 +1,7 @@
 export const PaginationReducerInitState = {
-    packs: {
-        totalCount: 100,
-        pageCount: 4,
-        pageNumber: 1,
-    },
     cards: {
         totalCount: 100,
-        pageCount: 4,
+        pageCount: 5,
         pageNumber: 1,
     }
 }
@@ -16,43 +11,15 @@ export type packsAndCardsPaginationType = {
     pageNumber: number
 }
 export type PaginationReducerStateType = {
-    packs: packsAndCardsPaginationType
     cards: packsAndCardsPaginationType
 }
 type ActionsType =
-    | ReturnType<typeof setPacksTotalCount>
-    | ReturnType<typeof setPacksPageCount>
-    | ReturnType<typeof setPacksPageNumber>
     | ReturnType<typeof setCardsTotalCount>
     | ReturnType<typeof setCardsPageCount>
     | ReturnType<typeof setCardsPageNumber>
 
 export const paginationReducer = (state: PaginationReducerStateType = PaginationReducerInitState, action: ActionsType) => {
     switch (action.type) {
-        case "pagination/SET-PACKS-TOTAL-COUNT":
-            return {
-                ...state,
-                packs: {
-                    ...state.packs,
-                    totalCount: action.value
-                }
-            }
-        case "pagination/SET-PACKS-PAGE-NUMBER":
-            return {
-                ...state,
-                packs: {
-                    ...state.packs,
-                    pageNumber: action.value
-                }
-            }
-        case "pagination/SET-PACKS-PAGE-COUNT":
-            return {
-                ...state,
-                packs: {
-                    ...state.packs,
-                    pageCount: action.value
-                }
-            }
         case "pagination/SET-CARDS-TOTAL-COUNT":
             return {
                 ...state,
@@ -65,7 +32,7 @@ export const paginationReducer = (state: PaginationReducerStateType = Pagination
             return {
                 ...state,
                 cards: {
-                    ...state.packs,
+                    ...state.cards,
                     pageNumber: action.value
                 }
             }
@@ -73,7 +40,7 @@ export const paginationReducer = (state: PaginationReducerStateType = Pagination
             return {
                 ...state,
                 cards: {
-                    ...state.packs,
+                    ...state.cards,
                     pageCount: action.value
                 }
             }
@@ -82,24 +49,6 @@ export const paginationReducer = (state: PaginationReducerStateType = Pagination
     }
 }
 
-export const setPacksTotalCount = (value: number) => {
-    return {
-        type: "pagination/SET-PACKS-TOTAL-COUNT",
-        value,
-    } as const
-}
-export const setPacksPageCount = (value: number) => {
-    return {
-        type: "pagination/SET-PACKS-PAGE-COUNT",
-        value,
-    } as const
-}
-export const setPacksPageNumber = (value: number) => {
-    return {
-        type: "pagination/SET-PACKS-PAGE-NUMBER",
-        value,
-    } as const
-}
 export const setCardsTotalCount = (value: number) => {
     return {
         type: "pagination/SET-CARDS-TOTAL-COUNT",

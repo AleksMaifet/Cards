@@ -1,6 +1,9 @@
 .page, .selectedPage {
     padding: 5px;
+    cursor: pointer;
 }
 .selectedPage{
     font-weight: bold;
+    cursor: pointer;
+    text-decoration:underline;
 }

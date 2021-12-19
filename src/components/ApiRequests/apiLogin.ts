@@ -26,13 +26,14 @@ type ResponseDeleteMeType = {
 const initial = axios.create(
     {
         baseURL: 'https://neko-back.herokuapp.com/2.0',
+        // baseURL:'http://localhost:7542/2.0/',
         withCredentials: true
     }
 )
 
 export const apiLogin = {
     setLogin(email: string, password: string, rememberMe: boolean) {
-        return initial.post<ResponseLoginType, AxiosResponse<ResponseLoginType>>('auth/login', {      // Типизация...???
+        return initial.post<ResponseLoginType, AxiosResponse<ResponseLoginType>>('auth/login', {
             email: email,
             password: password,
             rememberMe: rememberMe

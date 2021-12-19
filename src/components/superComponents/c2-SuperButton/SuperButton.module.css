@@ -33,3 +33,30 @@
 .default:active {
     transform: scale(1.025);
 }
+
+.activeDefault {
+    appearance: none;
+    background-color: #FFC229;
+    border-radius: 40em;
+    border-style: none;
+    box-shadow: #FF6314 0 -6px 8px inset;
+    box-sizing: border-box;
+    color: #000000;
+    cursor: pointer;
+    display: inline-block;
+    font-family: -apple-system, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: -.24px;
+    margin: 6px;
+    outline: none;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    text-decoration: none;
+    transition: all .15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    width: 150px;
+    transform: scale(1.1);
+}

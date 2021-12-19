@@ -20,15 +20,13 @@ const initialState = {
 type ActionsType = setUserDataType | setLogoutType | updateUserACType
 export const loginReducer = (state: initialStateType = initialState, action: ActionsType): initialStateType => {
 	switch (action.type) {
-		case'login-reducer/SET-USER-DATA': {
-			return {...state, ...action.data}
-		}
-		case 'login-reducer/LOGOUT': {
-			return {...state, ...action.data}
-		}
-		case "login-reducer/UPDATE-USER":
-			return {...state,
-			...action.updatedData}
+		case 'login-reducer/SET-USER-DATA':
+		case 'login-reducer/LOGOUT':
+		case 'login-reducer/UPDATE-USER':
+			return {
+				...state,
+				...action.data
+			}
 		default:
 			return state
 	}
@@ -54,11 +52,26 @@ const setLogout = () => {
 	} as const
 }
 type updateUserACType = ReturnType<typeof updateUserAC>
-export const updateUserAC = (updatedData:ResponseLoginType) => {
+export const updateUserAC = (data:ResponseLoginType) => {
 	return {
 		type: 'login-reducer/UPDATE-USER',
-		updatedData
+		data
 	} as const
+}
+
+export const authMeTC = () => (dispatch: Dispatch) => {
+	dispatch(isLoadAC('loading'))
+	apiLogin.me().then((res) => {
+		const data = {
+			isAuth: true,
+			_id: res.data._id,
+			email: res.data.email,
+			name: res.data.name,
+			avatar: (res.data.avatar ? res.data.avatar : null),
+		}
+		dispatch(setUserData(data))
+	}).catch((err) => console.log(err))
+		.finally(() => dispatch(isLoadAC('success')))
 }
 
 type setLogoutType = ReturnType<typeof setLogout>
@@ -76,6 +89,7 @@ export const loginTC = (email: string, password: string, rememberMe: boolean) =>
 	}).catch((err) => console.log(err))
 		.finally(() => dispatch(isLoadAC('success')))
 }
+
 export const logoutTC = () => (dispatch: Dispatch) => {
 	dispatch(isLoadAC('loading'))
 	apiLogin.logout().then(() => {
@@ -92,7 +106,7 @@ export const updateAvatarTC = (avatar:string | ArrayBuffer | null) => async (dis
 		dispatch(updateUserAC(updatedUser))
 	}
 	catch (err:any){
-		const errorMassage = err.response ? err.response.data.error : err.messages + ' Check internet connection!'
+		const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
 		alert(errorMassage)
 	}
 	finally {
