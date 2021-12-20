@@ -1,7 +1,9 @@
+
 type SortingComponentPropsType = {
     onSortChange: (rate: number) => void
+    disable:boolean
 }
-export const SortingComponent = ({onSortChange}: SortingComponentPropsType) => {
+export const SortingComponent = ({onSortChange,disable}: SortingComponentPropsType) => {
     const onUpSortChangeCallback = () => {
         onSortChange(1)
     }
@@ -10,8 +12,8 @@ export const SortingComponent = ({onSortChange}: SortingComponentPropsType) => {
     }
     return (
         <>
-            <button onClick={onUpSortChangeCallback}> ↑</button>
-            <button onClick={onDownSortChangeCallback}> ↓</button>
+            <button disabled={disable} onClick={onUpSortChangeCallback}> ↑</button>
+            <button disabled={disable} onClick={onDownSortChangeCallback}> ↓</button>
         </>
     )
 }

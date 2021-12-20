@@ -19,16 +19,17 @@ export const Profile = () => {
 	const isAvatar = useSelector((state: AppStoreType) => state.login.avatar)
 	const UpdateAvatar = (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files
-		if (file !== null) {
+		if (file) {
 			const reader = new FileReader();
 			reader.onload = ev => {
 				if (ev.target !== null) {
 					dispatch(updateAvatarTC(ev.target.result))
 				}
 			}
-			reader.readAsDataURL(file[0])
+			if(file[0]){
+				reader.readAsDataURL(file[0])
+			}
 		}
-
 	}
 	const logout = () => {
 		dispatch(logoutTC())
@@ -45,8 +46,8 @@ export const Profile = () => {
 					Upload
 				</label>
 			</div>
-			<div style={{height: '200px'}}>
-				<img src={isAvatar !== null ? isAvatar : ''}/>
+			<div className={s.imgContainer}>
+				<img className={s.img} src={isAvatar !== null ? isAvatar : ''}/>
 			</div>
 		</div>
 	)

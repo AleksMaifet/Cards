@@ -1,6 +1,6 @@
 import {Dispatch} from "redux";
 import {apiLogin, apiUpdate, ResponseLoginType} from "../ApiRequests/apiLogin";
-import {isLoadAC} from "./AppReducer";
+import {isLoadAC, isLoadAuthAC} from "./AppReducer";
 
 type initialStateType = {
 	isAuth: boolean
@@ -60,7 +60,6 @@ export const updateUserAC = (data:ResponseLoginType) => {
 }
 
 export const authMeTC = () => (dispatch: Dispatch) => {
-	dispatch(isLoadAC('loading'))
 	apiLogin.me().then((res) => {
 		const data = {
 			isAuth: true,
@@ -71,7 +70,7 @@ export const authMeTC = () => (dispatch: Dispatch) => {
 		}
 		dispatch(setUserData(data))
 	}).catch((err) => console.log(err))
-		.finally(() => dispatch(isLoadAC('success')))
+		.finally(() => dispatch(isLoadAuthAC(false)))
 }
 
 type setLogoutType = ReturnType<typeof setLogout>

@@ -6,9 +6,6 @@ import {appReducer} from "../Reducers/AppReducer";
 import {loginReducer} from "../Reducers/login-reducer";
 import {packsReducer} from "../Reducers/PacksReducer";
 import {cardsReducer} from "../Reducers/CardsReducer";
-import {searchByReducer} from "../Reducers/SearchByReducer";
-import {sortByReducer} from "../Reducers/SortByReducer";
-import {paginationReducer} from "../Reducers/PaginationReducer";
 
 const reducers = combineReducers({
 	app: appReducer,
@@ -17,9 +14,6 @@ const reducers = combineReducers({
 	login:loginReducer,
 	packs: packsReducer,
 	cards: cardsReducer,
-	searchBy: searchByReducer,
-	sortBy: sortByReducer,
-	pagination: paginationReducer,
 })
 
 export const store = createStore(reducers,applyMiddleware(thunk))

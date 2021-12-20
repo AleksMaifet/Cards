@@ -12,6 +12,7 @@ import {CheckMail} from "../Pages/CheckMailPage/CheckMail";
 import {CheckMailPrivetRoute} from "./PrivetRoutes/CheckMailPrivetRoute";
 import {Packs} from "../Pages/PacksPage/PacksContainer";
 import {Cards} from "../Pages/CardsPage/CardsContainer";
+import {InitializationPrivateRoute} from "./PrivetRoutes/InitializationPrivateRoute";
 
 
 export const PATH = {
@@ -22,7 +23,7 @@ export const PATH = {
 	REGISTRATIONPAGE: '/regist',
 	CHECKMAIL: '/check-mail',
 	PACKS: '/packs',
-	CARDS: '/cards'
+	CARDS: '/cards/:packId'
 }
 
 export const RoutesBlock = () => {
@@ -38,8 +39,16 @@ export const RoutesBlock = () => {
 				<Route path={PATH.LOGINPAGE} element={<LoginContainer/>}/>
 				<Route path={PATH.PROFILEPAGE} element={<Profile/>}/>
 				<Route path={PATH.REGISTRATIONPAGE} element={<RegistrationContainer/>}/>
-				<Route path={PATH.PACKS} element={<Packs/>}/>
-				<Route path={PATH.CARDS} element={<Cards/>}/>
+				<Route path={PATH.PACKS} element={
+					<InitializationPrivateRoute>
+						<Packs/>
+					</InitializationPrivateRoute>
+				}/>
+				<Route path={PATH.CARDS} element={
+					<InitializationPrivateRoute>
+						<Cards/>
+					</InitializationPrivateRoute>
+				}/>
 				<Route path={PATH.CHECKMAIL} element={
 					<CheckMailPrivetRoute>
 						<CheckMail/>

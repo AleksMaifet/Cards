@@ -34,8 +34,8 @@ export const PaginationComponent: React.FC<PaginationPropsType> = React.memo((pr
 	return (
 		<div>
 			{1 !== props.currentPage ? <button onClick={onPreviousPageCallback}>Previous</button> : null}
-			{pagesForRender.map(p => {
-				return <span
+			{pagesForRender.map((p,i) => {
+				return <span key={i}
 					onClick={() => {
 						props.onPageChanged(p)
 					}}

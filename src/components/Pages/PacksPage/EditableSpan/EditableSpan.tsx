@@ -4,6 +4,7 @@ type EditableSpanType = {
 	spanTitle: string
 	callback: (spanTitle: string,packId:string) => void
 	packId:string
+	disabled?:boolean
 }
 
 export const EditableSpan = React.memo(({spanTitle, ...props}: EditableSpanType) => {
@@ -27,7 +28,7 @@ export const EditableSpan = React.memo(({spanTitle, ...props}: EditableSpanType)
 	}
 	return (
 		changeTitle
-			? <input value={title} onChange={changeInputHandler} onBlur={activeChangeMode} onKeyPress={changeInputEnter} autoFocus/>
+			? <input disabled={props.disabled} value={title} onChange={changeInputHandler} onBlur={activeChangeMode} onKeyPress={changeInputEnter} autoFocus/>
 			: <span onDoubleClick={changeHandler}>{spanTitle}</span>
 	)
 })

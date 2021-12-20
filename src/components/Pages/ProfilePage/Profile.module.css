@@ -9,3 +9,16 @@
     cursor: pointer;
     background-color: yellow;
 }
+.imgContainer {
+    width: 250px;
+    height: 250px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+.img {
+    border-radius: 50%;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    margin: 0 auto;
+}

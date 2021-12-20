@@ -1,7 +1,14 @@
 import axios from "axios";
 
+export type ParamsType = {
+	page:number
+	pageCount:number
+	sortPacks:string
+	user_id:string
+	packName:string
+}
 
-export type PacksType = {
+export type PackType = {
 	cardsCount:number
 	created:string
 	grade:number
@@ -19,7 +26,7 @@ export type PacksType = {
 }
 
 export type ResponseGetPacksType = {
-	cardPacks:PacksType[]
+	cardPacks:PackType[]
 	cardPacksTotalCount:number
 	maxCardsCount:number
 	minCardsCount:number
@@ -38,20 +45,11 @@ const initial = axios.create(
 )
 
 export const apiPacks = {
-	getPacks(page: number, pageCount: number, ratelastUpdate: number, user_id: string, packName: string) {
-		const sortPacks = {
-			update: `${ratelastUpdate}updated`,
-			// amount:`${ratecardsAmount}cardsCount`,
-		}
+	getPacks(params:ParamsType) {
 		return initial.get<ResponseGetPacksType>('', {
-			params:{
-					page,
-					pageCount,
-					sortPacks: sortPacks.update,
-					user_id,
-					packName,
-				}
-		})
+				params
+			}
+		)
 	},
 	postPack(name:string){
 		return initial.post('',{

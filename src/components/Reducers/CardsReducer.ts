@@ -1,76 +1,141 @@
-export type cardType = {
-    answer: string
-    question: string
-    cardsPack_id: string
-    grade: number
-    rating: number
-    shots: number
-    type: string
-    user_id: string
-    created: string
-    updated: number
-    __v: number
-    _id: string
-}
+import {Dispatch} from "redux";
+import {AppStoreType} from "../store/store";
+import {AppHandlerType, isLoadAC} from "./AppReducer";
+import {apiCards, CardType, ResponseGetCardsType} from "../ApiRequests/apiCards";
+import {ThunkDispatch} from "redux-thunk";
+import {setPacksPageCount, setPacksPageNumber, sortPackCardsAC} from "./PacksReducer";
+
 export const CardsInitState = {
-    cards: [
-        {
-            answer: "no answer", question: "no question", cardsPack_id: "someID",
-            grade: 4.98, rating: 0, shots: 1, type: "card", user_id: "143234",
-            created: "2020", updated: 2020, __v: 0, _id: "some ID1"
-        },
-        {
-            answer: "no answer", question: "no question", cardsPack_id: "someID",
-            grade: 4.98, rating: 0, shots: 1, type: "card", user_id: "143234",
-            created: "2020", updated: 2020, __v: 0, _id: "some ID2"
-        },
-        {
-            answer: "no answer", question: "no question", cardsPack_id: "someID",
-            grade: 4.98, rating: 0, shots: 1, type: "card", user_id: "143234",
-            created: "2020", updated: 2020, __v: 0, _id: "someID3"
-        },
-    ],
-    cardsTotalCount: 3,
+    cards: [] as CardType[],
+    cardQuestion:'',
+    cardAnswer:'',
+    maxCardsCount: 25,
+    minCardsCount: 4,
+    sortPacksCards:'',
+    page:1,
+    pageCount: 5,
+    cardsTotalCount:0,
     maxGrade: 4.98,
     minGrade: 2.01,
-    page: 1,
-    pageCount: 4,
-    packUserId: "some pack user ID"
 }
 export type CardsInitStateType = typeof CardsInitState
-type ActionsType = ReturnType<typeof addCardAC> | ReturnType<typeof deleteCardAC>
-export const cardsReducer = (state: CardsInitStateType = CardsInitState, action: ActionsType) => {
+type ActionsType =
+  ReturnType<typeof setCardsAC>
+  | ReturnType<typeof sortPackCardsAC>
+  | ReturnType<typeof setPacksPageCount>
+  | ReturnType<typeof setPacksPageNumber>
+  | ReturnType<typeof searchQuestionPackAC>
+  | ReturnType<typeof searchAnswerPackAC>
+export const cardsReducer = (state: CardsInitStateType = CardsInitState, action: ActionsType):CardsInitStateType => {
     switch (action.type) {
-        case "cards/ADD-CARD":
+        case "cards/SET-CARD":
             return {
                 ...state,
-                cards: [
-                    ...state.cards,
-                    {
-                        answer: "no answer", question: "no question", cardsPack_id: "someID",
-                        grade: 4.98, rating: 0, shots: 1, type: "card", user_id: "143234",
-                        created: "2020", updated: 2020, __v: 0, _id: "some ID" + new Date().toString()
-                    },
-                ]
+                ...action.data
             }
-        case "cards/DELETE-CARD":
+        case "Packs/SORT-PACKS":
+        case "Packs/SET-PACKS-PAGE-COUNT":
+        case "Packs/SET-PACKS-PAGE-NUMBER":
+        case "Packs/SEARCH-ANSWER-CARD":
+        case "Packs/SEARCH-QUESTION-CARD":
             return {
                 ...state,
-                cards: state.cards.filter(item => item._id != action.id)
+                ...action.payload
             }
-
         default:
             return state;
     }
 }
-export const addCardAC = () => {
+export const setCardsAC = (data:ResponseGetCardsType) => {
     return {
-        type: "cards/ADD-CARD",
+        type: "cards/SET-CARD",
+        data,
     } as const
 }
-export const deleteCardAC = (id: string) => {
+export const searchQuestionPackAC = (cardQuestion: string) => {
     return {
-        type: "cards/DELETE-CARD",
-        id,
+        type: "Packs/SEARCH-QUESTION-CARD",
+        payload:{
+            cardQuestion
+        }
     } as const
+}
+export const searchAnswerPackAC = (cardAnswer: string) => {
+    return {
+        type: "Packs/SEARCH-ANSWER-CARD",
+        payload:{
+            cardAnswer
+        }
+    } as const
+}
+
+export const setCardTC = (packId:string) => async (dispatch: Dispatch,getState:() => AppStoreType) => {
+    const cardsData = getState().cards
+    const params = {
+        cardsPack_id:packId,
+        sortCards:cardsData.sortPacksCards,
+        page:cardsData.page,
+        pageCount:cardsData.pageCount,
+        cardAnswer:cardsData.cardAnswer,
+        cardQuestion:cardsData.cardQuestion,
+    }
+    dispatch(isLoadAC('loading'))
+    try {
+       const {data} =  await apiCards.getCards(params)
+        dispatch(setCardsAC(data))
+    } catch (err:any) {
+        const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
+        alert(errorMassage)
+    }
+    finally {
+        dispatch(isLoadAC('success'))
+    }
+}
+
+export const addPackTC = (packId:string,question:string,answer:string) => async (dispatch: ThunkDispatch<AppStoreType, void, ActionsType | AppHandlerType>,getState:() => AppStoreType) => {
+    const cardsData = getState().cards
+    const params = {
+        cardsPack_id:packId,
+        question,
+        answer,
+        pageCount:cardsData.pageCount
+    }
+    dispatch(isLoadAC('loading'))
+    try {
+        await apiCards.postCard(params)
+        dispatch(setCardTC(packId))
+    } catch (err:any) {
+        const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
+        alert(errorMassage)
+    }
+    finally {
+        dispatch(isLoadAC('success'))
+    }
+}
+
+export const deleteCardTC = (id:string,packId:string) => async (dispatch: ThunkDispatch<AppStoreType, void, ActionsType | AppHandlerType>) => {
+    dispatch(isLoadAC('loading'))
+    try {
+        await apiCards.deleteCard(id)
+        dispatch(setCardTC(packId))
+    } catch (err:any) {
+        const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
+        alert(errorMassage)
+    }
+    finally {
+        dispatch(isLoadAC('success'))
+    }
+}
+export const updateCardTC = (id:string,title:string,packId:string) => async (dispatch: ThunkDispatch<AppStoreType, void, ActionsType | AppHandlerType>) => {
+    dispatch(isLoadAC('loading'))
+    try {
+        await apiCards.updateCard(id,title)
+        dispatch(setCardTC(packId))
+    } catch (err:any) {
+        const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
+        alert(errorMassage)
+    }
+    finally {
+        dispatch(isLoadAC('success'))
+    }
 }

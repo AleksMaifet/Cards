@@ -1,18 +1,17 @@
 import {Dispatch} from "redux";
-import {apiPacks, PacksType, ResponseGetPacksType} from "../ApiRequests/apiPacks";
-import {AppHandlerType, isLoadAC} from "./AppReducer";
+import {apiPacks, PackType, ResponseGetPacksType} from "../ApiRequests/apiPacks";
+import {AppHandlerType, isLoadAC, isLoadAuthAC} from "./AppReducer";
 import {AppStoreType} from "../store/store";
 import {ThunkDispatch} from "redux-thunk";
 
 export const PacksInitState = {
-	cardPacks: [] as PacksType[],
+	cardPacks: [] as PackType[],
 	cardPacksTotalCount: 0,
-	maxCardsCount: 25,
-	minCardsCount: 4,
+	maxPacksCount: 25,
+	minPacksCount: 4,
 	page: 1,
 	pageCount: 5,
-	lastUpdate: 0,
-	cardsAmount: 0,
+	sortPacksCards:'',
 	whoisCard:'',
 	searchByPacks:'',
 	newPack:'',
@@ -23,8 +22,7 @@ type ActionsType =
 	| ReturnType<typeof setPackAC>
 	| ReturnType<typeof setPacksPageCount>
 	| ReturnType<typeof setPacksPageNumber>
-	| ReturnType<typeof sortPacksLastUpdateAC>
-	| ReturnType<typeof sortPackCardsAmountAC>
+	| ReturnType<typeof sortPackCardsAC>
 	| ReturnType<typeof changeWhoisCardAC>
 	| ReturnType<typeof searchByPacksAC>
 
@@ -38,10 +36,9 @@ export const packsReducer = (state = PacksInitState, action: ActionsType): Packs
 			}
 		case "Packs/SET-PACKS-PAGE-NUMBER":
 		case "Packs/SET-PACKS-PAGE-COUNT":
-		case "Packs/CHANGE-PACK-CARDS-AMOUNT":
-		case "Packs/CHANGE-PACKS-LAST-UPDATE":
 		case "Packs/WHO-SET-PACKS":
 		case "Packs/SEARCH-PACKS":
+		case "Packs/SORT-PACKS":
 			return {
 				...state,
 				...action.payload
@@ -65,20 +62,11 @@ export const deletePackAC = (id: string) => {
 	} as const
 }
 
-export const sortPackCardsAmountAC = (cardsAmount: number) => {
+export const sortPackCardsAC = (sortPacksCards: string) => {
 	return {
-		type: "Packs/CHANGE-PACK-CARDS-AMOUNT",
+		type: "Packs/SORT-PACKS",
 		payload: {
-			cardsAmount
-		},
-	} as const
-}
-
-export const sortPacksLastUpdateAC = (lastUpdate: number) => {
-	return {
-		type: "Packs/CHANGE-PACKS-LAST-UPDATE",
-		payload: {
-			lastUpdate
+			sortPacksCards
 		},
 	} as const
 }
@@ -117,17 +105,18 @@ export const changeWhoisCardAC = (whoisCard: string) => {
 	} as const
 }
 
-export const setCardTC = () => async (dispatch: Dispatch,getState:() => AppStoreType) => {
+export const setPacksTC = () => async (dispatch: Dispatch,getState:() => AppStoreType) => {
 	const packsData = getState().packs
+	const params = {
+		page:packsData.page,
+		pageCount:packsData.pageCount,
+		sortPacks:packsData.sortPacksCards,
+		user_id:packsData.whoisCard,
+		packName:packsData.searchByPacks,
+	}
 	dispatch(isLoadAC('loading'))
 	try {
-		const {data} = await apiPacks.getPacks(
-			packsData.page,
-			packsData.pageCount,
-			packsData.lastUpdate,
-			packsData.whoisCard,
-			packsData.searchByPacks,
-		)
+		const {data} = await apiPacks.getPacks(params)
 		dispatch(setPackAC(data))
 	} catch (err:any) {
       const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
@@ -142,7 +131,7 @@ export const addPackTC = (newPackTitle:string) => async (dispatch: ThunkDispatch
 	dispatch(isLoadAC('loading'))
 	try {
 		await apiPacks.postPack(newPackTitle)
-		dispatch(setCardTC())
+		dispatch(setPacksTC())
 	} catch (err:any) {
 		const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
 		alert(errorMassage)
@@ -156,7 +145,7 @@ export const deletePackTC = (id:string) => async (dispatch: ThunkDispatch<AppSto
 	dispatch(isLoadAC('loading'))
 	try {
 		await apiPacks.deletePack(id)
-		dispatch(setCardTC())
+		dispatch(setPacksTC())
 	} catch (err:any) {
 		const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
 		alert(errorMassage)
@@ -170,7 +159,7 @@ export const updatePackTC = (id:string,title:string) => async (dispatch: ThunkDi
 	dispatch(isLoadAC('loading'))
 	try {
 		await apiPacks.updatePack(id,title)
-		dispatch(setCardTC())
+		dispatch(setPacksTC())
 	} catch (err:any) {
 		const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
 		alert(errorMassage)
