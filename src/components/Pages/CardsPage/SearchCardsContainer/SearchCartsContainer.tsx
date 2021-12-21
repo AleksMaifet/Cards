@@ -37,13 +37,13 @@ export const SearchCartsContainer = ({...props}:SearchCartsContainerType) => {
 			<div>
 				<form onSubmit={onSearchQuestion} className={s.divSearchBlock}>
 					<SuperInputText disabled={disable} placeholder='Search Question' value={searchValueQuestion} onChangeText={setSearchValueQuestion}/>
-					<SuperButton illuminated={!!searchQuestion}>Search</SuperButton>
+					<SuperButton disabled={disable} illuminated={!!searchQuestion}>Search</SuperButton>
 				</form>
 			</div>
 			<div>
 				<form onSubmit={onSearchAnswer} className={s.divSearchBlock}>
 					<SuperInputText disabled={disable} placeholder='Search Answer' value={searchValueAnswer} onChangeText={setSearchValueAnswer}/>
-					<SuperButton illuminated={!!searchAnswer.length}>Search</SuperButton>
+					<SuperButton disabled={disable} illuminated={!!searchAnswer.length}>Search</SuperButton>
 				</form>
 			</div>
 		</div>

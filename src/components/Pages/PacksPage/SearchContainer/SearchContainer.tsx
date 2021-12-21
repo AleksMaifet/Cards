@@ -37,8 +37,7 @@ export const SearchContainer = ({...props}:SearchContainerType) => {
 					illuminated={whoisCard.length === 0} onClick={allPacksHandler}>All</SuperButton>
 			</div>
 			<form onSubmit={onSearchChange} className={s.divSearchBlock}>
-				<SuperInputText placeholder='Search' value={searchValue} onChangeText={setSearchValue}/>
-				<SuperButton>Search</SuperButton>
+				<SuperInputText disabled={disabled} placeholder='Search' value={searchValue} onChangeText={setSearchValue}/>
 			</form>
 		</>
 	)

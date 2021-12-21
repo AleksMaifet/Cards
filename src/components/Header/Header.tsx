@@ -13,16 +13,7 @@ export const Header = () => {
 				<NavLink to={PATH.PROFILEPAGE}>profile</NavLink>
 			</div>
 			<div style={{margin: '20px'}}>
-				<NavLink to={PATH.RECOVERYPAGE}>revovery</NavLink>
-			</div>
-			<div style={{margin: '20px'}}>
-				<NavLink to={PATH.REGISTRATIONPAGE}>registration</NavLink>
-			</div>
-			<div style={{margin: '20px'}}>
 				<NavLink to={PATH.PACKS}>Packs</NavLink>
-			</div>
-			<div style={{margin: '20px'}}>
-				<NavLink to={PATH.CARDS}>Cards</NavLink>
 			</div>
 		</div>
 	)

@@ -7,10 +7,11 @@ import {addPackTC} from "../../../Reducers/CardsReducer";
 
 type AddCardPageType = {
 	packId:string | undefined
+	disable:boolean
 }
 
 export const AddCardPage = ({...props}:AddCardPageType) => {
-	const {packId} = props
+	const {packId,disable} = props
 	const dispatch = useDispatch()
 	const [visibility, setVisibility] = useState<boolean>(false)
 	const [question, setQuestion] = useState<string>('')
@@ -28,7 +29,6 @@ export const AddCardPage = ({...props}:AddCardPageType) => {
 	}
 
 
-
 	return (
 		<div>
 			<SuperButton onClick={onAddPackModule}>Add card</SuperButton>
@@ -43,7 +43,7 @@ export const AddCardPage = ({...props}:AddCardPageType) => {
 					</div>
 					<div>
 						<SuperButton onClick={onCloseCardModule}>Cansel</SuperButton>
-						<SuperButton onClick={addCardHandler}>Save</SuperButton>
+						<SuperButton disabled={disable} onClick={addCardHandler}>Save</SuperButton>
 					</div>
 				</div>
 			</div>

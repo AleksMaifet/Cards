@@ -6,6 +6,7 @@ import {useDispatch} from "react-redux";
 import {addPackTC} from "../../../Reducers/PacksReducer";
 
 
+
 export const AddPackPage = () => {
 	const dispatch = useDispatch()
 	const [visibility, setVisibility] = useState<boolean>(false)

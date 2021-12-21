@@ -19,6 +19,7 @@ import {EditableSpan} from "./EditableSpan/EditableSpan";
 import {NavLink} from "react-router-dom";
 import {PackType} from "../../ApiRequests/apiPacks";
 import {IsLoadType} from "../../Reducers/AppReducer";
+import {AuthLoad} from "../LoadPage/AuthLoad/AuthLoad";
 
 
 export const Packs = () => {
@@ -31,12 +32,14 @@ export const Packs = () => {
 	const whoisCard = useSelector<AppStoreType, string | ''>(state => state.packs.whoisCard)
 	const searchByValue = useSelector<AppStoreType, string>(state => state.packs.searchByPacks)
 	const statusLoad =  useSelector<AppStoreType, IsLoadType>(state => state.app.isLoad)
+	const isPackLoad =  useSelector<AppStoreType, IsLoadType>(state => state.packs.isPackLoad)
+	const packs = useSelector<AppStoreType, Array<PackType>>(state => state.packs.cardPacks)
 
 	useEffect(() => {
 			dispatch(setPacksTC())
 	}, [dispatch, pageNumber, pageCount, sortPacks, whoisCard,searchByValue])
 
-	const packs = useSelector<AppStoreType, Array<PackType>>(state => state.packs.cardPacks)
+
 
 	const onCardsAmountSortChange = useCallback((rate: number) => {
 		dispatch(sortPackCardsAC(`${rate}cardsCount`))
@@ -72,12 +75,13 @@ export const Packs = () => {
 			dispatch(updatePackTC(id,spanTitle))
 	},[dispatch])
 
+
 	const renderedPacks = packs.map(item => {
 		const update = item.updated.slice(0, 10).split('-').reverse().join('.')
 		return (
 			<div key={item._id} className={s.divTableRow}>
 				<div className={s.divTableCol}>
-					<EditableSpan disabled={statusLoad === 'loading'} spanTitle={item.name} callback={changeTitlePack} packId={item._id}/>
+					<EditableSpan isMyTitle={item.user_id === userId} spanTitle={item.name} callback={changeTitlePack} packId={item._id}/>
 				</div>
 				<div className={s.divTableCol}>{item.cardsCount}</div>
 				<div className={s.divTableCol}>{update}</div>
@@ -88,7 +92,7 @@ export const Packs = () => {
 					<div className={s.divTableCol}>
 						{userId && item.user_id === userId &&
 						<SuperButton
-							onClick={() => {onDeletePackHandler(item._id)}} disabled={statusLoad === 'loading'}>Delete</SuperButton>
+							onClick={() => {onDeletePackHandler(item._id)}} disabled={isPackLoad === 'loading'}>Delete</SuperButton>
 						}
 					</div>
 				</div>
@@ -103,14 +107,21 @@ export const Packs = () => {
 			<div className={s.divTable}>
 				<div className={s.divTableRow}>
 					<div className={s.divTableCol}>Name</div>
-					<div className={s.divTableCol}>Cards count<SortingComponent disable={statusLoad === 'loading'} onSortChange={onCardsAmountSortChange}/>
+					<div className={s.divTableCol}>Cards count<SortingComponent disable={statusLoad === 'loading'}
+																																			onSortChange={onCardsAmountSortChange}/>
 					</div>
-					<div className={s.divTableCol}>Updated<SortingComponent disable={statusLoad === 'loading'} onSortChange={onLastUpdateSortChange}/>
+					<div className={s.divTableCol}>Updated<SortingComponent disable={statusLoad === 'loading'}
+																																	onSortChange={onLastUpdateSortChange}/>
 					</div>
 					<div className={s.divTableCol}>Cards</div>
 					<div className={s.divTableCol}>Actions</div>
 				</div>
-				{renderedPacks}
+				{
+					isPackLoad === 'loading' ?
+						<AuthLoad/>
+						:
+						renderedPacks
+				}
 				<AddPackPage/>
 			</div>
 			<div>
@@ -118,8 +129,10 @@ export const Packs = () => {
 					<SuperSelect options={[5, 10, 15, 20]} onChangeOption={onPageCountChange}/>
 				</div>
 				<div>
-					<PaginationComponent totalCount={totalCount} pageCount={pageCount} currentPage={pageNumber}
+					{
+						packs.length && <PaginationComponent totalCount={totalCount} pageCount={pageCount} currentPage={pageNumber}
 															 onPageChanged={onPageChange}/>
+					}
 				</div>
 			</div>
 		</div>

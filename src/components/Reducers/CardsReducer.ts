@@ -3,7 +3,8 @@ import {AppStoreType} from "../store/store";
 import {AppHandlerType, isLoadAC} from "./AppReducer";
 import {apiCards, CardType, ResponseGetCardsType} from "../ApiRequests/apiCards";
 import {ThunkDispatch} from "redux-thunk";
-import {setPacksPageCount, setPacksPageNumber, sortPackCardsAC} from "./PacksReducer";
+import {isPackLoadAC, setPacksPageCount, setPacksPageNumber, sortPackCardsAC} from "./PacksReducer";
+import {handleServerError, handleSpinnerEnd, handleSpinnerTimerEnd} from "../../utils/utils";
 
 export const CardsInitState = {
     cards: [] as CardType[],
@@ -17,6 +18,7 @@ export const CardsInitState = {
     cardsTotalCount:0,
     maxGrade: 4.98,
     minGrade: 2.01,
+    packId:'',
 }
 export type CardsInitStateType = typeof CardsInitState
 type ActionsType =
@@ -26,6 +28,8 @@ type ActionsType =
   | ReturnType<typeof setPacksPageNumber>
   | ReturnType<typeof searchQuestionPackAC>
   | ReturnType<typeof searchAnswerPackAC>
+  | ReturnType<typeof setPackIdAC>
+  | ReturnType<typeof isPackLoadAC>
 export const cardsReducer = (state: CardsInitStateType = CardsInitState, action: ActionsType):CardsInitStateType => {
     switch (action.type) {
         case "cards/SET-CARD":
@@ -38,6 +42,7 @@ export const cardsReducer = (state: CardsInitStateType = CardsInitState, action:
         case "Packs/SET-PACKS-PAGE-NUMBER":
         case "Packs/SEARCH-ANSWER-CARD":
         case "Packs/SEARCH-QUESTION-CARD":
+        case "cards/SET-PACK-ID":
             return {
                 ...state,
                 ...action.payload
@@ -46,6 +51,16 @@ export const cardsReducer = (state: CardsInitStateType = CardsInitState, action:
             return state;
     }
 }
+
+export const setPackIdAC = (packId:string) => {
+    return {
+        type: "cards/SET-PACK-ID",
+        payload:{
+            packId
+        },
+    } as const
+}
+
 export const setCardsAC = (data:ResponseGetCardsType) => {
     return {
         type: "cards/SET-CARD",
@@ -69,10 +84,10 @@ export const searchAnswerPackAC = (cardAnswer: string) => {
     } as const
 }
 
-export const setCardTC = (packId:string) => async (dispatch: Dispatch,getState:() => AppStoreType) => {
+export const setCardTC = () => async (dispatch: Dispatch,getState:() => AppStoreType) => {
     const cardsData = getState().cards
     const params = {
-        cardsPack_id:packId,
+        cardsPack_id:cardsData.packId,
         sortCards:cardsData.sortPacksCards,
         page:cardsData.page,
         pageCount:cardsData.pageCount,
@@ -84,11 +99,10 @@ export const setCardTC = (packId:string) => async (dispatch: Dispatch,getState:(
        const {data} =  await apiCards.getCards(params)
         dispatch(setCardsAC(data))
     } catch (err:any) {
-        const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
-        alert(errorMassage)
+        handleServerError(err)
     }
     finally {
-        dispatch(isLoadAC('success'))
+        handleSpinnerEnd(dispatch)
     }
 }
 
@@ -100,42 +114,39 @@ export const addPackTC = (packId:string,question:string,answer:string) => async 
         answer,
         pageCount:cardsData.pageCount
     }
-    dispatch(isLoadAC('loading'))
+    dispatch(isPackLoadAC('loading'))
     try {
         await apiCards.postCard(params)
-        dispatch(setCardTC(packId))
+        dispatch(setCardTC())
     } catch (err:any) {
-        const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
-        alert(errorMassage)
+        handleServerError(err)
     }
     finally {
-        dispatch(isLoadAC('success'))
+        handleSpinnerTimerEnd(dispatch)
     }
 }
 
-export const deleteCardTC = (id:string,packId:string) => async (dispatch: ThunkDispatch<AppStoreType, void, ActionsType | AppHandlerType>) => {
-    dispatch(isLoadAC('loading'))
+export const deleteCardTC = (id:string) => async (dispatch: ThunkDispatch<AppStoreType, void, ActionsType | AppHandlerType>) => {
+    dispatch(isPackLoadAC('loading'))
     try {
         await apiCards.deleteCard(id)
-        dispatch(setCardTC(packId))
+        dispatch(setCardTC())
     } catch (err:any) {
-        const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
-        alert(errorMassage)
+        handleServerError(err)
     }
     finally {
-        dispatch(isLoadAC('success'))
+        handleSpinnerTimerEnd(dispatch)
     }
 }
-export const updateCardTC = (id:string,title:string,packId:string) => async (dispatch: ThunkDispatch<AppStoreType, void, ActionsType | AppHandlerType>) => {
-    dispatch(isLoadAC('loading'))
+export const updateCardTC = (id:string,title:string) => async (dispatch: ThunkDispatch<AppStoreType, void, ActionsType | AppHandlerType>) => {
+    dispatch(isPackLoadAC('loading'))
     try {
         await apiCards.updateCard(id,title)
-        dispatch(setCardTC(packId))
+        dispatch(setCardTC())
     } catch (err:any) {
-        const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
-        alert(errorMassage)
+        handleServerError(err)
     }
     finally {
-        dispatch(isLoadAC('success'))
+        handleSpinnerTimerEnd(dispatch)
     }
 }

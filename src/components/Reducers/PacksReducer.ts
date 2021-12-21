@@ -1,8 +1,9 @@
 import {Dispatch} from "redux";
 import {apiPacks, PackType, ResponseGetPacksType} from "../ApiRequests/apiPacks";
-import {AppHandlerType, isLoadAC, isLoadAuthAC} from "./AppReducer";
+import {AppHandlerType, isLoadAC, IsLoadType} from "./AppReducer";
 import {AppStoreType} from "../store/store";
 import {ThunkDispatch} from "redux-thunk";
+import {handleServerError, handleSpinnerEnd, handleSpinnerTimerEnd} from "../../utils/utils";
 
 export const PacksInitState = {
 	cardPacks: [] as PackType[],
@@ -15,9 +16,10 @@ export const PacksInitState = {
 	whoisCard:'',
 	searchByPacks:'',
 	newPack:'',
+	isPackLoad:'idle' as IsLoadType,
 }
 type PacksInitStateType = typeof PacksInitState
-type ActionsType =
+export type ActionsType =
 	| ReturnType<typeof deletePackAC>
 	| ReturnType<typeof setPackAC>
 	| ReturnType<typeof setPacksPageCount>
@@ -25,6 +27,7 @@ type ActionsType =
 	| ReturnType<typeof sortPackCardsAC>
 	| ReturnType<typeof changeWhoisCardAC>
 	| ReturnType<typeof searchByPacksAC>
+	| ReturnType<typeof isPackLoadAC>
 
 
 export const packsReducer = (state = PacksInitState, action: ActionsType): PacksInitStateType => {
@@ -39,6 +42,7 @@ export const packsReducer = (state = PacksInitState, action: ActionsType): Packs
 		case "Packs/WHO-SET-PACKS":
 		case "Packs/SEARCH-PACKS":
 		case "Packs/SORT-PACKS":
+		case "Packs/IS-PACK-LOAD":
 			return {
 				...state,
 				...action.payload
@@ -88,6 +92,14 @@ export const setPacksPageCount = (pageCount: number) => {
 		}
 	} as const
 }
+export const isPackLoadAC = (isPackLoad: IsLoadType) => {
+	return {
+		type: "Packs/IS-PACK-LOAD",
+		payload: {
+			isPackLoad
+		},
+	} as const
+}
 export const setPacksPageNumber = (page: number) => {
 	return {
 		type: "Packs/SET-PACKS-PAGE-NUMBER",
@@ -119,52 +131,49 @@ export const setPacksTC = () => async (dispatch: Dispatch,getState:() => AppStor
 		const {data} = await apiPacks.getPacks(params)
 		dispatch(setPackAC(data))
 	} catch (err:any) {
-      const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
-      alert(errorMassage)
-	}
-	finally {
-		dispatch(isLoadAC('success'))
+		handleServerError(err)
+	} finally {
+		handleSpinnerEnd(dispatch)
 	}
 }
 
 export const addPackTC = (newPackTitle:string) => async (dispatch: ThunkDispatch<AppStoreType, void, ActionsType | AppHandlerType>) => {
-	dispatch(isLoadAC('loading'))
+	dispatch(isPackLoadAC('loading'))
 	try {
 		await apiPacks.postPack(newPackTitle)
 		dispatch(setPacksTC())
 	} catch (err:any) {
-		const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
-		alert(errorMassage)
+		handleServerError(err)
 	}
 	finally {
-		dispatch(isLoadAC('success'))
+		handleSpinnerTimerEnd(dispatch)
 	}
 }
 
 export const deletePackTC = (id:string) => async (dispatch: ThunkDispatch<AppStoreType, void, ActionsType | AppHandlerType>) => {
-	dispatch(isLoadAC('loading'))
+	dispatch(isPackLoadAC('loading'))
 	try {
 		await apiPacks.deletePack(id)
 		dispatch(setPacksTC())
-	} catch (err:any) {
-		const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
-		alert(errorMassage)
+	}
+	catch (err:any) {
+		handleServerError(err)
 	}
 	finally {
-		dispatch(isLoadAC('success'))
+		handleSpinnerTimerEnd(dispatch)
 	}
 }
 
 export const updatePackTC = (id:string,title:string) => async (dispatch: ThunkDispatch<AppStoreType, void, ActionsType | AppHandlerType>) => {
-	dispatch(isLoadAC('loading'))
+	dispatch(isPackLoadAC('loading'))
 	try {
 		await apiPacks.updatePack(id,title)
 		dispatch(setPacksTC())
-	} catch (err:any) {
-		const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
-		alert(errorMassage)
+	}
+	catch (err:any) {
+	handleServerError(err)
 	}
 	finally {
-		dispatch(isLoadAC('success'))
+		handleSpinnerTimerEnd(dispatch)
 	}
 }

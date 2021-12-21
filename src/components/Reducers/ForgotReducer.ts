@@ -1,6 +1,7 @@
 import {cardsForgotAPI} from "../ApiRequests/apiForgot";
 import {Dispatch} from "redux";
 import {isLoadAC} from "./AppReducer";
+import {handleServerError, handleSpinnerEnd} from "../../utils/utils";
 
 export type initStateType = typeof initState
 
@@ -67,10 +68,9 @@ export const forgotPasswordTC = (email: string) => {
 			dispatch(forgotPasswordAC(success))
 			dispatch(emailRecoveryAC(email))
 		} catch (err:any) {
-			const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
-			alert(errorMassage)
+			handleServerError(err)
 		} finally {
-			dispatch(isLoadAC('success'))
+			handleSpinnerEnd(dispatch)
 		}
 	}
 }
@@ -82,10 +82,9 @@ export const newPasswordTC = (newPass: string, tokenId: string | undefined) => {
 			await cardsForgotAPI.setNewPassword(newPass, tokenId)
 			dispatch(newPasswordAC(true))
 		} catch (err: any) {
-			const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
-			alert(errorMassage)
+			handleServerError(err)
 		} finally {
-			dispatch(isLoadAC('success'))
+			handleSpinnerEnd(dispatch)
 		}
 	}
 }
