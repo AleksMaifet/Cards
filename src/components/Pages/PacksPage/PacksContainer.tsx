@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from "react";
+import React, {useState,useCallback, useEffect} from "react";
 import s from "./Packs.module.css"
 import {useDispatch, useSelector} from "react-redux";
 import {AppStoreType} from "../../store/store";
@@ -20,6 +20,10 @@ import {NavLink} from "react-router-dom";
 import {PackType} from "../../ApiRequests/apiPacks";
 import {IsLoadType} from "../../Reducers/AppReducer";
 import {AuthLoad} from "../LoadPage/AuthLoad/AuthLoad";
+import SuperDoubleRange from "../../superComponents/c8-SuperDoubleRange/SuperDoubleRange";
+import {rangeReducerStateType, setMaxUserValue, setMinUserValue} from "../../Reducers/RangeReducer";
+import {PATH} from "../../RoutesBlock/RoutesBlock";
+import {NavLink} from "react-router-dom";
 
 
 export const Packs = () => {
@@ -34,8 +38,9 @@ export const Packs = () => {
 	const statusLoad =  useSelector<AppStoreType, IsLoadType>(state => state.app.isLoad)
 	const isPackLoad =  useSelector<AppStoreType, IsLoadType>(state => state.packs.isPackLoad)
 	const packs = useSelector<AppStoreType, Array<PackType>>(state => state.packs.cardPacks)
-
-	useEffect(() => {
+    const rangeState = useSelector<AppStoreType, rangeReducerStateType>(state => state.range)
+    const {minServer, maxServer, minUser, maxUser} = rangeState
+    useEffect(() => {
 			dispatch(setPacksTC())
 	}, [dispatch, pageNumber, pageCount, sortPacks, whoisCard,searchByValue])
 
@@ -135,6 +140,28 @@ export const Packs = () => {
 					}
 				</div>
 			</div>
+        const [value1, setValue1] = useState(0)
+        const [value2, setValue2] = useState(100)
+        const onLeftChangeRange = (value: number) => {
+        dispatch(setMinUserValue(value))
+    }
+        const onRightChangeRange = (value: number) => {
+        dispatch(setMaxUserValue(value))
+    }
+        return (
+        <div>
+            <div className={s.settings}>
+                <SuperDoubleRange min={minServer}
+                                  max={maxServer}
+                                  value={[minUser, maxUser]}
+                                  onLeftChangeRange={onLeftChangeRange}
+                                  onRightChangeRange={onRightChangeRange}
+                />
+                <div>
+                    <SuperInputText value={searchByValue} onChangeText={onSearchChange}/><SuperButton
+                  onClick={onCClickChange}>Search</SuperButton>
+                </div>
+            </div>
 		</div>
 	)
 }

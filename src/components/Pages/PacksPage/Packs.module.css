@@ -15,6 +15,7 @@
 }
 .divTableCol {
     float: left; /* fix for  buggy browsers */
+    display: table-column;
     width: 200px;
     background-color: #ccc;
     height: 35px;
@@ -42,4 +43,9 @@
 }
 .divSelectBlock {
     margin: 10px 0;
+}
+.settings{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
