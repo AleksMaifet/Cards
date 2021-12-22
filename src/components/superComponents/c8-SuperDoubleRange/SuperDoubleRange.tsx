@@ -7,7 +7,7 @@ type SuperDoubleRangePropsType = {
     onRightChangeRange?: (value: number) => void
     min: number
     max: number
-    value: [number, number]
+    value: [number | undefined, number | undefined]
     // min, max, step, disable, ...
 }
 

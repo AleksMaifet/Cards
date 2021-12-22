@@ -8,8 +8,10 @@ import {handleServerError, handleSpinnerEnd, handleSpinnerTimerEnd} from "../../
 export const PacksInitState = {
 	cardPacks: [] as PackType[],
 	cardPacksTotalCount: 0,
-	maxPacksCount: 25,
-	minPacksCount: 4,
+	maxCardsCount: 0,
+	minCardsCount: 0,
+	maxCardsCountUser: 0,
+	minCardsCountUser: 0,
 	page: 1,
 	pageCount: 5,
 	sortPacksCards:'',
@@ -28,6 +30,7 @@ export type ActionsType =
 	| ReturnType<typeof changeWhoisCardAC>
 	| ReturnType<typeof searchByPacksAC>
 	| ReturnType<typeof isPackLoadAC>
+	| ReturnType<typeof setCardsCountAC>
 
 
 export const packsReducer = (state = PacksInitState, action: ActionsType): PacksInitStateType => {
@@ -43,6 +46,7 @@ export const packsReducer = (state = PacksInitState, action: ActionsType): Packs
 		case "Packs/SEARCH-PACKS":
 		case "Packs/SORT-PACKS":
 		case "Packs/IS-PACK-LOAD":
+		case "Packs/SET-CARDS-COUNT":
 			return {
 				...state,
 				...action.payload
@@ -65,7 +69,15 @@ export const deletePackAC = (id: string) => {
 		id,
 	} as const
 }
-
+export const setCardsCountAC = (maxCardsCountUser: number,minCardsCountUser:number) => {
+	return {
+		type: "Packs/SET-CARDS-COUNT",
+		payload:{
+			maxCardsCountUser,
+			minCardsCountUser,
+		}
+	} as const
+}
 export const sortPackCardsAC = (sortPacksCards: string) => {
 	return {
 		type: "Packs/SORT-PACKS",
@@ -125,7 +137,10 @@ export const setPacksTC = () => async (dispatch: Dispatch,getState:() => AppStor
 		sortPacks:packsData.sortPacksCards,
 		user_id:packsData.whoisCard,
 		packName:packsData.searchByPacks,
+		min:packsData.minCardsCountUser,
+		max:packsData.maxCardsCountUser,
 	}
+	console.log(packsData.minCardsCount,packsData.maxCardsCount)
 	dispatch(isLoadAC('loading'))
 	try {
 		const {data} = await apiPacks.getPacks(params)

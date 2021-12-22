@@ -4,6 +4,7 @@ import SuperInputText from "../../../superComponents/c1-SuperInputText/SuperInpu
 import SuperButton from "../../../superComponents/c2-SuperButton/SuperButton";
 import {searchByPacksAC} from "../../../Reducers/PacksReducer";
 import {useDispatch} from "react-redux";
+import {Range} from "../../../Range";
 
 type SearchContainerType = {
 	myPacks:(text:string) => void

@@ -1,12 +1,15 @@
-import React, {useState,useCallback, useEffect} from "react";
+import React, {useCallback, useEffect} from "react";
 import s from "./Packs.module.css"
 import {useDispatch, useSelector} from "react-redux";
 import {AppStoreType} from "../../store/store";
 import {
 	changeWhoisCardAC,
-	deletePackTC, searchByPacksAC,
+	deletePackTC,
+	searchByPacksAC,
 	setPacksPageCount,
-	setPacksPageNumber, setPacksTC, sortPackCardsAC,
+	setPacksPageNumber,
+	setPacksTC,
+	sortPackCardsAC,
 	updatePackTC
 } from "../../Reducers/PacksReducer";
 import SuperButton from "../../superComponents/c2-SuperButton/SuperButton";
@@ -20,10 +23,7 @@ import {NavLink} from "react-router-dom";
 import {PackType} from "../../ApiRequests/apiPacks";
 import {IsLoadType} from "../../Reducers/AppReducer";
 import {AuthLoad} from "../LoadPage/AuthLoad/AuthLoad";
-import SuperDoubleRange from "../../superComponents/c8-SuperDoubleRange/SuperDoubleRange";
-import {rangeReducerStateType, setMaxUserValue, setMinUserValue} from "../../Reducers/RangeReducer";
-import {PATH} from "../../RoutesBlock/RoutesBlock";
-import {NavLink} from "react-router-dom";
+import {Range} from "../../Range";
 
 
 export const Packs = () => {
@@ -35,15 +35,16 @@ export const Packs = () => {
 	const userId = useSelector<AppStoreType, string | null>(state => state.login._id)
 	const whoisCard = useSelector<AppStoreType, string | ''>(state => state.packs.whoisCard)
 	const searchByValue = useSelector<AppStoreType, string>(state => state.packs.searchByPacks)
-	const statusLoad =  useSelector<AppStoreType, IsLoadType>(state => state.app.isLoad)
-	const isPackLoad =  useSelector<AppStoreType, IsLoadType>(state => state.packs.isPackLoad)
+	const statusLoad = useSelector<AppStoreType, IsLoadType>(state => state.app.isLoad)
+	const isPackLoad = useSelector<AppStoreType, IsLoadType>(state => state.packs.isPackLoad)
 	const packs = useSelector<AppStoreType, Array<PackType>>(state => state.packs.cardPacks)
-    const rangeState = useSelector<AppStoreType, rangeReducerStateType>(state => state.range)
-    const {minServer, maxServer, minUser, maxUser} = rangeState
-    useEffect(() => {
-			dispatch(setPacksTC())
-	}, [dispatch, pageNumber, pageCount, sortPacks, whoisCard,searchByValue])
+	const minCardsCountUser = useSelector<AppStoreType, number>(state => state.packs.minCardsCountUser)
+	const maxCardsCountUser = useSelector<AppStoreType, number>(state => state.packs.maxCardsCountUser)
 
+
+	useEffect(() => {
+		dispatch(setPacksTC())
+	}, [dispatch, pageNumber, pageCount, sortPacks, whoisCard, searchByValue,minCardsCountUser,maxCardsCountUser])
 
 
 	const onCardsAmountSortChange = useCallback((rate: number) => {
@@ -61,24 +62,24 @@ export const Packs = () => {
 	const onDeletePackHandler = useCallback((id: string) => {
 		dispatch(deletePackTC(id))
 	}, [dispatch])
-	const myPacks = useCallback((text:string) => {
-		if(!text.length){
+	const myPacks = useCallback((text: string) => {
+		if (!text.length) {
 			dispatch(searchByPacksAC(''))
 			userId && dispatch(changeWhoisCardAC(userId))
 		}
 		userId && dispatch(changeWhoisCardAC(userId))
 	}, [dispatch, userId])
-	const allPacks = useCallback((text:string) => {
-		if(!text.length) {
+	const allPacks = useCallback((text: string) => {
+		if (!text.length) {
 			dispatch(searchByPacksAC(''))
 			dispatch(changeWhoisCardAC(''))
 		}
 		dispatch(changeWhoisCardAC(''))
 	}, [dispatch])
 
-	const changeTitlePack = useCallback((id:string,spanTitle:string) => {
-			dispatch(updatePackTC(id,spanTitle))
-	},[dispatch])
+	const changeTitlePack = useCallback((id: string, spanTitle: string) => {
+		dispatch(updatePackTC(id, spanTitle))
+	}, [dispatch])
 
 
 	const renderedPacks = packs.map(item => {
@@ -86,7 +87,8 @@ export const Packs = () => {
 		return (
 			<div key={item._id} className={s.divTableRow}>
 				<div className={s.divTableCol}>
-					<EditableSpan isMyTitle={item.user_id === userId} spanTitle={item.name} callback={changeTitlePack} packId={item._id}/>
+					<EditableSpan isMyTitle={item.user_id === userId} spanTitle={item.name} callback={changeTitlePack}
+												packId={item._id}/>
 				</div>
 				<div className={s.divTableCol}>{item.cardsCount}</div>
 				<div className={s.divTableCol}>{update}</div>
@@ -97,7 +99,9 @@ export const Packs = () => {
 					<div className={s.divTableCol}>
 						{userId && item.user_id === userId &&
 						<SuperButton
-							onClick={() => {onDeletePackHandler(item._id)}} disabled={isPackLoad === 'loading'}>Delete</SuperButton>
+							onClick={() => {
+								onDeletePackHandler(item._id)
+							}} disabled={isPackLoad === 'loading'}>Delete</SuperButton>
 						}
 					</div>
 				</div>
@@ -107,7 +111,11 @@ export const Packs = () => {
 	return (
 		<div className={s.divTableBlock}>
 			<div className={s.divHeaderBlock}>
-				<SearchContainer myPacks={myPacks} allPacks={allPacks} whoisCard={whoisCard} disabled={statusLoad === 'loading'}/>
+				<SearchContainer myPacks={myPacks} allPacks={allPacks} whoisCard={whoisCard}
+												 disabled={statusLoad === 'loading'}/>
+			</div>
+			<div style={{margin:'50px 0'}}>
+				<Range/>
 			</div>
 			<div className={s.divTable}>
 				<div className={s.divTableRow}>
@@ -136,32 +144,10 @@ export const Packs = () => {
 				<div>
 					{
 						packs.length && <PaginationComponent totalCount={totalCount} pageCount={pageCount} currentPage={pageNumber}
-															 onPageChanged={onPageChange}/>
+																								 onPageChanged={onPageChange}/>
 					}
 				</div>
 			</div>
-        const [value1, setValue1] = useState(0)
-        const [value2, setValue2] = useState(100)
-        const onLeftChangeRange = (value: number) => {
-        dispatch(setMinUserValue(value))
-    }
-        const onRightChangeRange = (value: number) => {
-        dispatch(setMaxUserValue(value))
-    }
-        return (
-        <div>
-            <div className={s.settings}>
-                <SuperDoubleRange min={minServer}
-                                  max={maxServer}
-                                  value={[minUser, maxUser]}
-                                  onLeftChangeRange={onLeftChangeRange}
-                                  onRightChangeRange={onRightChangeRange}
-                />
-                <div>
-                    <SuperInputText value={searchByValue} onChangeText={onSearchChange}/><SuperButton
-                  onClick={onCClickChange}>Search</SuperButton>
-                </div>
-            </div>
 		</div>
 	)
 }
