@@ -1,10 +1,10 @@
-import React, {FormEvent, useCallback, useState} from "react";
+import React, {useState} from "react";
 import s from "../Packs.module.css";
 import SuperInputText from "../../../superComponents/c1-SuperInputText/SuperInputText";
 import SuperButton from "../../../superComponents/c2-SuperButton/SuperButton";
 import {searchByPacksAC} from "../../../Reducers/PacksReducer";
 import {useDispatch} from "react-redux";
-import {Range} from "../../../Range";
+import {useDebounce} from "../../../../customHook/useDebounce";
 
 type SearchContainerType = {
 	myPacks:(text:string) => void
@@ -17,10 +17,6 @@ export const SearchContainer = ({...props}:SearchContainerType) => {
 	const {myPacks,allPacks,whoisCard,disabled} = props
 	const dispatch = useDispatch()
 	const [searchValue,setSearchValue] = useState<string>('')
-	const onSearchChange = useCallback((e:FormEvent<HTMLFormElement>) => {
-		e.preventDefault()
-		dispatch(searchByPacksAC(searchValue))
-	}, [dispatch,searchValue])
 
 	const myPacksHandler = () => {
 		myPacks(searchValue)
@@ -28,6 +24,11 @@ export const SearchContainer = ({...props}:SearchContainerType) => {
 	const allPacksHandler = () => {
 		allPacks(searchValue)
 	}
+
+	const string = useDebounce(searchValue,500)
+	dispatch(searchByPacksAC(string))
+
+
 
 	return (
 		<>
@@ -37,9 +38,9 @@ export const SearchContainer = ({...props}:SearchContainerType) => {
 				<SuperButton disabled={disabled}
 					illuminated={whoisCard.length === 0} onClick={allPacksHandler}>All</SuperButton>
 			</div>
-			<form onSubmit={onSearchChange} className={s.divSearchBlock}>
+			<div className={s.divSearchBlock}>
 				<SuperInputText disabled={disabled} placeholder='Search' value={searchValue} onChangeText={setSearchValue}/>
-			</form>
+			</div>
 		</>
 	)
 }

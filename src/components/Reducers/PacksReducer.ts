@@ -140,15 +140,14 @@ export const setPacksTC = () => async (dispatch: Dispatch,getState:() => AppStor
 		min:packsData.minCardsCountUser,
 		max:packsData.maxCardsCountUser,
 	}
-	console.log(packsData.minCardsCount,packsData.maxCardsCount)
-	dispatch(isLoadAC('loading'))
+	dispatch(isPackLoadAC('loading'))
 	try {
 		const {data} = await apiPacks.getPacks(params)
 		dispatch(setPackAC(data))
 	} catch (err:any) {
 		handleServerError(err)
 	} finally {
-		handleSpinnerEnd(dispatch)
+		handleSpinnerTimerEnd(dispatch)
 	}
 }
 

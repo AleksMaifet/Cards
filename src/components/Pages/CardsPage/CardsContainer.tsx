@@ -56,6 +56,7 @@ export const Cards = () => {
 	const changeTitlePack = useCallback((id:string,spanTitle:string) => {
 		dispatch(updateCardTC(id,spanTitle))
 	},[dispatch])
+
 	const renderedCards = cards.map(item => {
 		return (
 			<div key={item._id} className={s.divTableRow}>
@@ -77,7 +78,7 @@ export const Cards = () => {
 	return (
 		<div className={s.divTableBlock}>
 			<div className={s.divHeaderBlock}>
-				<SearchCartsContainer disable={statusLoad === 'loading'} searchQuestion={searchQuestion} searchAnswer={searchAnswer}/>
+				<SearchCartsContainer disable={statusLoad === 'loading'}/>
 			</div>
 			<div className={s.divTable}>
 				<div className={s.divTableRow}>

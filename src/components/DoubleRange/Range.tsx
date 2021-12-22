@@ -1,10 +1,10 @@
 import React, {useCallback, useEffect, useState} from "react";
-import s from "./Pages/PacksPage/Packs.module.css";
-import SuperDoubleRange from "./superComponents/c8-SuperDoubleRange/SuperDoubleRange";
+import s from "../Pages/PacksPage/Packs.module.css";
 import {useDispatch, useSelector} from "react-redux";
-import {AppStoreType} from "./store/store";
-import SuperButton from "./superComponents/c2-SuperButton/SuperButton";
-import {setCardsCountAC, setPacksTC} from "./Reducers/PacksReducer";
+import {AppStoreType} from "../store/store";
+import SuperButton from "../superComponents/c2-SuperButton/SuperButton";
+import {setCardsCountAC} from "../Reducers/PacksReducer";
+import SuperDoubleRange from "../superComponents/c8-SuperDoubleRange/SuperDoubleRange";
 
 
 export const Range = () => {
@@ -18,7 +18,11 @@ export const Range = () => {
 	useEffect(() => {
 		setMinValue(minServer)
 		setMaxValue(maxServer)
-	},[minServer,maxServer])
+
+		return () => {
+			dispatch(setCardsCountAC(0,0))
+		}
+	},[dispatch,minServer,maxServer])
 
 
 	const onChangeRange = useCallback( () => {

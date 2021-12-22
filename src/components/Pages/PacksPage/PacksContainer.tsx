@@ -23,7 +23,7 @@ import {NavLink} from "react-router-dom";
 import {PackType} from "../../ApiRequests/apiPacks";
 import {IsLoadType} from "../../Reducers/AppReducer";
 import {AuthLoad} from "../LoadPage/AuthLoad/AuthLoad";
-import {Range} from "../../Range";
+import {Range} from "../../DoubleRange/Range";
 
 
 export const Packs = () => {
