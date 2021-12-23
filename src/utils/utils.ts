@@ -8,7 +8,7 @@ export const handleServerError = (err:any) => {
 }
 export const handleSpinnerTimerEnd = (dispatch: Dispatch<ActionsType>) => {
 	setTimeout(() => {
-		return dispatch(isPackLoadAC('success'))
-	}, 1000)
+	dispatch(isPackLoadAC('success'))
+	}, 1500)
 }
 

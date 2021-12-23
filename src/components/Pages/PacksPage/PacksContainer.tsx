@@ -25,7 +25,7 @@ import {AuthLoad} from "../LoadPage/AuthLoad/AuthLoad";
 import {ShowPackBar} from "../ShowPacksBar/ShowPacksBar";
 
 
-export const Packs = () => {
+export const Packs = React.memo(() => {
 	const dispatch = useDispatch()
 	const totalCount = useSelector<AppStoreType, number>(state => state.packs.cardPacksTotalCount)
 	const pageNumber = useSelector<AppStoreType, number>(state => state.packs.page)
@@ -127,7 +127,7 @@ export const Packs = () => {
 							:
 							renderedPacks
 					}
-					<AddPackPage/>
+					{isPackLoad !== 'loading' && <AddPackPage/>}
 				</div>
 				<div>
 					<div className={s.divSelectBlock}>
@@ -144,4 +144,4 @@ export const Packs = () => {
 			</div>
 		</div>
 	)
-}
+})

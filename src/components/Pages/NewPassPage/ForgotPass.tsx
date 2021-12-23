@@ -21,9 +21,9 @@ export const ForgotPass = () => {
 		setValue('')
 	},[dispatch,value,tokenId])
 
-	const changeVisibility = () => {
+	const changeVisibility = useCallback(() => {
 		typeInput === 'text' ? setTypeInput('password') : setTypeInput('text')
-	}
+	},[typeInput])
 
 	return (
 		<div>

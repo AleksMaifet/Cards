@@ -17,7 +17,7 @@ import {SearchCartsContainer} from "./SearchCardsContainer/SearchCartsContainer"
 import {AuthLoad} from "../LoadPage/AuthLoad/AuthLoad";
 
 
-export const Cards = () => {
+export const Cards = React.memo(() => {
 	const totalCount = useSelector<AppStoreType, number>(state => state.cards.cardsTotalCount)
 	const pageNumber = useSelector<AppStoreType, number>(state => state.cards.page)
 	const pageCount = useSelector<AppStoreType, number>(state => state.cards.pageCount)
@@ -103,7 +103,7 @@ export const Cards = () => {
 							:
 							renderedCards
 					}
-					{isYoursCard && <AddCardPage disable={isPackLoad === 'loading'} packId={packId}/>}
+					{isYoursCard && isPackLoad !== 'loading'&& <AddCardPage disable={false} packId={packId}/>}
 				</div>
 			</div>
 			<div>
@@ -119,4 +119,4 @@ export const Cards = () => {
 			</div>
 		</div>
 	)
-}
+})

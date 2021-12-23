@@ -5,6 +5,8 @@ import {logoutTC, updateAvatarTC} from "../../Reducers/login-reducer";
 import s from './Profile.module.css'
 import {Navigate} from "react-router-dom";
 import {PATH} from "../../RoutesBlock/RoutesBlock";
+import c from "../../../styleComponents/App.module.css";
+import SuperButton from "../../superComponents/c2-SuperButton/SuperButton";
 
 export type filesType = {
 	lastModified: number
@@ -39,19 +41,20 @@ export const Profile = () => {
 		return <Navigate to={PATH.LOGINPAGE}/>
 	}
 	return (
-		<div>
-			<div style={{display:'flex',justifyContent:'center'}}>
-				<div>ProfilePage</div>
-				{isAuth && <button onClick={logout}>logout</button>}
-			</div>
-			<div>
-				<label className={s.customFileUpload}>
-					<input className={s.customInput} type={'file'} onChange={UpdateAvatar}/>
-					Upload
-				</label>
-			</div>
-			<div style={{height: '200px'}}>
-				<img src={isAvatar !== null ? isAvatar : ''}/>
+		<div className={c.container}>
+			<div className={s.profileBlock}>
+				<div style={{display: 'flex', justifyContent: 'center'}}>
+					{isAuth && <SuperButton onClick={logout}>logout</SuperButton>}
+				</div>
+				<div>
+					<label className={s.customFileUpload}>
+						<input className={s.customInput} type={'file'} onChange={UpdateAvatar}/>
+						Upload
+					</label>
+				</div>
+				<div className={s.imgContainer}>
+					<img className={s.img} src={isAvatar !== null ? isAvatar : ''}/>
+				</div>
 			</div>
 		</div>
 	)
