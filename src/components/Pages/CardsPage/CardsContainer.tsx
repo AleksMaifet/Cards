@@ -7,7 +7,7 @@ import {deleteCardTC, setCardTC, setPackIdAC, updateCardTC} from "../../Reducers
 import {SortingComponent} from "../../superComponents/SortingComponent/SortingComponent";
 import SuperSelect from "../../superComponents/c5-SuperSelect/SuperSelect";
 import {PaginationComponent} from "../../superComponents/PaginationComponent/PaginationComponent";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {CardType} from "../../ApiRequests/apiCards";
 import {IsLoadType} from "../../Reducers/AppReducer";
 import {AddCardPage} from "./AddCardPage/addCardPage";
@@ -25,12 +25,12 @@ export const Cards = () => {
 	const userId = useSelector<AppStoreType, string | null>(state => state.login._id)
 	const isYoursCard = useSelector<AppStoreType, boolean>(state => state.cards.cards.every(el => el.user_id === userId))
 	const cards = useSelector<AppStoreType, Array<CardType>>(state => state.cards.cards)
-	const statusLoad = useSelector<AppStoreType, IsLoadType>(state => state.app.isLoad)
 	const searchQuestion = useSelector<AppStoreType, string>(state => state.cards.cardQuestion)
 	const searchAnswer = useSelector<AppStoreType, string>(state => state.cards.cardAnswer)
 	const isPackLoad =  useSelector<AppStoreType, IsLoadType>(state => state.packs.isPackLoad)
 	const dispatch = useDispatch()
-
+	const navigate = useNavigate()
+	const goBack = () => navigate(-1)
 	const {packId} = useParams<'packId'>()
 
 	useEffect(() => {
@@ -51,17 +51,18 @@ export const Cards = () => {
 		dispatch(setPacksPageCount(+value))
 	},[dispatch])
 	const onDeleteCardHandler = useCallback((id: string) => {
-	dispatch(deleteCardTC(id))
-	},[dispatch])
-	const changeTitlePack = useCallback((id:string,spanTitle:string) => {
-		dispatch(updateCardTC(id,spanTitle))
-	},[dispatch])
+		dispatch(deleteCardTC(id))
+	}, [dispatch])
+	const changeTitlePack = useCallback((id: string, spanTitle: string) => {
+		dispatch(updateCardTC(id, spanTitle))
+	}, [dispatch])
 
 	const renderedCards = cards.map(item => {
 		return (
 			<div key={item._id} className={s.divTableRow}>
 				<div className={s.divTableCol}>
-					<EditableSpan isMyTitle={item.user_id === userId} spanTitle={item.question} callback={changeTitlePack} packId={item._id}/>
+					<EditableSpan isMyTitle={item.user_id === userId} spanTitle={item.question} callback={changeTitlePack}
+												packId={item._id}/>
 				</div>
 				<div className={s.divTableCol}>{item.answer}</div>
 				<div className={s.divTableCol}>{item.updated.slice(0, 10).split('-').reverse().join('.')}</div>
@@ -69,43 +70,50 @@ export const Cards = () => {
 				<div className={s.divTableCol}>
 					{item.user_id === userId &&
 					<SuperButton
-						onClick={() => {onDeleteCardHandler(item._id)}}>Delete</SuperButton>
+						onClick={() => {
+							onDeleteCardHandler(item._id)
+						}}>Delete</SuperButton>
 					}
 				</div>
 			</div>
 		)
 	})
 	return (
-		<div className={s.divTableBlock}>
-			<div className={s.divHeaderBlock}>
-				<SearchCartsContainer disable={statusLoad === 'loading'}/>
-			</div>
-			<div className={s.divTable}>
-				<div className={s.divTableRow}>
-					<div className={s.divTableCol}>Question</div>
-					<div className={s.divTableCol}>Answer</div>
-					<div className={s.divTableCol}>Updated<SortingComponent disable={statusLoad === 'loading'}
-																																	onSortChange={onSortByLastUpdate}/></div>
-					<div className={s.divTableCol}>Grade<SortingComponent disable={statusLoad === 'loading'}
-																																onSortChange={onSortByGrade}/></div>
-					<div className={s.divTableCol}>Actions</div>
+		<div>
+			<div className={s.divTableBlock}>
+				<div className={s.divTable}>
+					<div style={{display:'flex'}}>
+						<SuperButton onClick={goBack}>Back</SuperButton>
+					</div>
+					<div className={s.divHeaderBlock}>
+						<SearchCartsContainer/>
+					</div>
+					<div className={s.divTableRow}>
+						<div className={s.divTableCol}>Question</div>
+						<div className={s.divTableCol}>Answer</div>
+						<div className={s.divTableCol}>Updated<SortingComponent disable={isPackLoad === 'loading'}
+																																		onSortChange={onSortByLastUpdate}/></div>
+						<div className={s.divTableCol}>Grade<SortingComponent disable={isPackLoad === 'loading'}
+																																	onSortChange={onSortByGrade}/></div>
+						<div className={s.divTableCol}>Actions</div>
+					</div>
+					{
+						isPackLoad === 'loading' ?
+							<AuthLoad/>
+							:
+							renderedCards
+					}
+					{isYoursCard && <AddCardPage disable={isPackLoad === 'loading'} packId={packId}/>}
 				</div>
-				{
-					isPackLoad === 'loading' ?
-						<AuthLoad/>
-						:
-						renderedCards
-				}
-				{isYoursCard && <AddCardPage disable={isPackLoad === 'loading'} packId={packId}/>}
 			</div>
 			<div>
 				<div className={s.divSelectBlock}>
-					<SuperSelect options={[5, 10, 15, 20]} onChangeOption={onPageCountChange}/>
+					<SuperSelect options={[10, 15, 20]} onChangeOption={onPageCountChange}/>
 				</div>
 				<div>
 					{
 						cards.length && <PaginationComponent totalCount={totalCount} pageCount={pageCount} currentPage={pageNumber}
-																 onPageChanged={onPageChange}/>
+																								 onPageChanged={onPageChange}/>
 					}
 				</div>
 			</div>

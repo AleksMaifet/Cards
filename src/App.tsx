@@ -6,7 +6,6 @@ import {Load} from "./components/Pages/LoadPage/Load";
 import {useDispatch, useSelector} from "react-redux";
 import {authMeTC} from './components/Reducers/login-reducer';
 import {AppStoreType} from "./components/store/store";
-import {AuthLoad} from "./components/Pages/LoadPage/AuthLoad/AuthLoad";
 
 export const App = () => {
 	const dispatch = useDispatch()
@@ -17,7 +16,7 @@ export const App = () => {
 	}, [dispatch])
 
 	if (isAuthLoad) {
-		return <AuthLoad/>
+		return <Load/>
 	}
 
 	return (

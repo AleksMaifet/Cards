@@ -29,14 +29,20 @@ const SuperDoubleRange: React.FC<SuperDoubleRangePropsType> = (
 
 
     return (
-        <>
-            <div>
-            <input onChange={onLeftChangeCallback} type="range" min={min} max={max} value={value ? value[0] : 0} className={s.slider} id="lower"/>
-                <input onChange={onRightChangeCallback} type="range" min={min} max={max} value={value ? value[1] : 100} className={s.slider} id="higher"/>
-                <span>{value[0]}  /  {value[1]}</span>
-            </div>
-
-        </>
+      <div>
+        <div style={{width:'0'}}>
+          <input onChange={onLeftChangeCallback} type="range" min={min} max={max} value={value ? value[0] : 0}
+                 className={s.slider} id="lower"/>
+          <input onChange={onRightChangeCallback} type="range" min={min} max={max} value={value ? value[1] : 100}
+                 className={s.slider} id="higher"/>
+        </div>
+        <div>
+          <div style={{display:'flex',justifyContent:'space-around',width:'182px'}}>
+            <div className={s.sliderContainerNumber}><span>{value[0]}</span></div>
+            <div className={s.sliderContainerNumber}><span>{value[1]}</span></div>
+          </div>
+        </div>
+      </div>
     )
 }
 

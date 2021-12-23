@@ -2,9 +2,10 @@
     display: table;
     width: auto;
     height: 700px;
-    background-color: #eee;
-    border: 1px solid #666666;
     border-spacing: 5px; /* cellspacing:poor IE support for  this */
+    min-height: 100vh;
+    background-color: #FEFEFF;
+    border-radius: 8px;
 }
 .divTableRow {
     display: flex;
@@ -27,26 +28,30 @@
 
 .divTableBlock {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: center;
 }
+
 .divHeaderBlock {
     display: flex;
-    width: 1000px;
-    justify-content: space-around;
+    justify-content: space-between;
+    margin-top: 50px;
 }
+
 .divSearchBlock {
-    width: 600px;
     display: flex;
-    justify-content: space-around;
-    align-items: center;
+    margin: 50px;
 }
+
 .divSelectBlock {
     margin: 10px 0;
 }
-.settings{
+
+.settings {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    height: 100px;
     justify-content: space-between;
-    width: 600px;
+}
+.tableWrapper {
+    background-color: #FEFEFF;
 }

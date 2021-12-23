@@ -1,7 +1,7 @@
 import {cardsForgotAPI} from "../ApiRequests/apiForgot";
 import {Dispatch} from "redux";
 import {isLoadAC} from "./AppReducer";
-import {handleServerError, handleSpinnerEnd} from "../../utils/utils";
+import {handleServerError} from "../../utils/utils";
 
 export type initStateType = typeof initState
 
@@ -70,7 +70,7 @@ export const forgotPasswordTC = (email: string) => {
 		} catch (err:any) {
 			handleServerError(err)
 		} finally {
-			handleSpinnerEnd(dispatch)
+			dispatch(isLoadAC('success'))
 		}
 	}
 }
@@ -84,7 +84,7 @@ export const newPasswordTC = (newPass: string, tokenId: string | undefined) => {
 		} catch (err: any) {
 			handleServerError(err)
 		} finally {
-			handleSpinnerEnd(dispatch)
+			dispatch(isLoadAC('success'))
 		}
 	}
 }

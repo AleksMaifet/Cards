@@ -1,10 +1,10 @@
 import {Dispatch} from "redux";
 import {AppStoreType} from "../store/store";
-import {AppHandlerType, isLoadAC} from "./AppReducer";
+import {AppHandlerType} from "./AppReducer";
 import {apiCards, CardType, ResponseGetCardsType} from "../ApiRequests/apiCards";
 import {ThunkDispatch} from "redux-thunk";
 import {isPackLoadAC, setPacksPageCount, setPacksPageNumber, sortPackCardsAC} from "./PacksReducer";
-import {handleServerError, handleSpinnerEnd, handleSpinnerTimerEnd} from "../../utils/utils";
+import {handleServerError, handleSpinnerTimerEnd} from "../../utils/utils";
 
 export const CardsInitState = {
     cards: [] as CardType[],
@@ -14,7 +14,7 @@ export const CardsInitState = {
     minCardsCount: 4,
     sortPacksCards:'',
     page:1,
-    pageCount: 5,
+    pageCount: 10,
     cardsTotalCount:0,
     maxGrade: 4.98,
     minGrade: 2.01,
@@ -94,7 +94,7 @@ export const setCardTC = () => async (dispatch: Dispatch,getState:() => AppStore
         cardAnswer:cardsData.cardAnswer,
         cardQuestion:cardsData.cardQuestion,
     }
-    dispatch(isLoadAC('loading'))
+    dispatch(isPackLoadAC('loading'))
     try {
        const {data} =  await apiCards.getCards(params)
         dispatch(setCardsAC(data))
@@ -102,7 +102,7 @@ export const setCardTC = () => async (dispatch: Dispatch,getState:() => AppStore
         handleServerError(err)
     }
     finally {
-        handleSpinnerEnd(dispatch)
+        handleSpinnerTimerEnd(dispatch)
     }
 }
 

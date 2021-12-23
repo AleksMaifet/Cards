@@ -1,6 +1,5 @@
 import {Dispatch} from "redux";
 import {ActionsType, isPackLoadAC} from "../components/Reducers/PacksReducer";
-import {AppHandlerType, isLoadAC} from "../components/Reducers/AppReducer";
 
 
 export const handleServerError = (err:any) => {
@@ -8,10 +7,8 @@ export const handleServerError = (err:any) => {
 	alert(errorMassage)
 }
 export const handleSpinnerTimerEnd = (dispatch: Dispatch<ActionsType>) => {
-		setTimeout(() => {
+	setTimeout(() => {
 		return dispatch(isPackLoadAC('success'))
 	}, 1000)
 }
-export const handleSpinnerEnd = (dispatch: Dispatch<AppHandlerType>) => {
-	dispatch(isLoadAC('success'))
-}
+

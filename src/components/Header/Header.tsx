@@ -7,10 +7,7 @@ export const Header = () => {
 	return (
 		<div style={{display: 'flex', justifyContent: 'center'}}>
 			<div style={{margin: '20px'}}>
-				<NavLink to={PATH.LOGINPAGE}>login</NavLink>
-			</div>
-			<div style={{margin: '20px'}}>
-				<NavLink to={PATH.PROFILEPAGE}>profile</NavLink>
+				<NavLink to={PATH.PROFILEPAGE}>Profile</NavLink>
 			</div>
 			<div style={{margin: '20px'}}>
 				<NavLink to={PATH.PACKS}>Packs</NavLink>

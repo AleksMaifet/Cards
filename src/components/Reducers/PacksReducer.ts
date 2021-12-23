@@ -1,9 +1,9 @@
 import {Dispatch} from "redux";
 import {apiPacks, PackType, ResponseGetPacksType} from "../ApiRequests/apiPacks";
-import {AppHandlerType, isLoadAC, IsLoadType} from "./AppReducer";
+import {AppHandlerType, IsLoadType} from "./AppReducer";
 import {AppStoreType} from "../store/store";
 import {ThunkDispatch} from "redux-thunk";
-import {handleServerError, handleSpinnerEnd, handleSpinnerTimerEnd} from "../../utils/utils";
+import {handleServerError, handleSpinnerTimerEnd} from "../../utils/utils";
 
 export const PacksInitState = {
 	cardPacks: [] as PackType[],
@@ -13,7 +13,7 @@ export const PacksInitState = {
 	maxCardsCountUser: 0,
 	minCardsCountUser: 0,
 	page: 1,
-	pageCount: 5,
+	pageCount: 10,
 	sortPacksCards:'',
 	whoisCard:'',
 	searchByPacks:'',

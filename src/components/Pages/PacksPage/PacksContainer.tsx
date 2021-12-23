@@ -5,7 +5,6 @@ import {AppStoreType} from "../../store/store";
 import {
 	changeWhoisCardAC,
 	deletePackTC,
-	searchByPacksAC,
 	setPacksPageCount,
 	setPacksPageNumber,
 	setPacksTC,
@@ -23,7 +22,7 @@ import {NavLink} from "react-router-dom";
 import {PackType} from "../../ApiRequests/apiPacks";
 import {IsLoadType} from "../../Reducers/AppReducer";
 import {AuthLoad} from "../LoadPage/AuthLoad/AuthLoad";
-import {Range} from "../../DoubleRange/Range";
+import {ShowPackBar} from "../ShowPacksBar/ShowPacksBar";
 
 
 export const Packs = () => {
@@ -35,7 +34,6 @@ export const Packs = () => {
 	const userId = useSelector<AppStoreType, string | null>(state => state.login._id)
 	const whoisCard = useSelector<AppStoreType, string | ''>(state => state.packs.whoisCard)
 	const searchByValue = useSelector<AppStoreType, string>(state => state.packs.searchByPacks)
-	const statusLoad = useSelector<AppStoreType, IsLoadType>(state => state.app.isLoad)
 	const isPackLoad = useSelector<AppStoreType, IsLoadType>(state => state.packs.isPackLoad)
 	const packs = useSelector<AppStoreType, Array<PackType>>(state => state.packs.cardPacks)
 	const minCardsCountUser = useSelector<AppStoreType, number>(state => state.packs.minCardsCountUser)
@@ -62,18 +60,10 @@ export const Packs = () => {
 	const onDeletePackHandler = useCallback((id: string) => {
 		dispatch(deletePackTC(id))
 	}, [dispatch])
-	const myPacks = useCallback((text: string) => {
-		if (!text.length) {
-			dispatch(searchByPacksAC(''))
-			userId && dispatch(changeWhoisCardAC(userId))
-		}
+	const myPacks = useCallback(() => {
 		userId && dispatch(changeWhoisCardAC(userId))
 	}, [dispatch, userId])
-	const allPacks = useCallback((text: string) => {
-		if (!text.length) {
-			dispatch(searchByPacksAC(''))
-			dispatch(changeWhoisCardAC(''))
-		}
+	const allPacks = useCallback(() => {
 		dispatch(changeWhoisCardAC(''))
 	}, [dispatch])
 
@@ -101,7 +91,7 @@ export const Packs = () => {
 						<SuperButton
 							onClick={() => {
 								onDeletePackHandler(item._id)
-							}} disabled={isPackLoad === 'loading'}>Delete</SuperButton>
+							}}>Delete</SuperButton>
 						}
 					</div>
 				</div>
@@ -110,42 +100,46 @@ export const Packs = () => {
 	})
 	return (
 		<div className={s.divTableBlock}>
-			<div className={s.divHeaderBlock}>
-				<SearchContainer myPacks={myPacks} allPacks={allPacks} whoisCard={whoisCard}
-												 disabled={statusLoad === 'loading'}/>
-			</div>
-			<div style={{margin:'50px 0'}}>
-				<Range/>
-			</div>
-			<div className={s.divTable}>
-				<div className={s.divTableRow}>
-					<div className={s.divTableCol}>Name</div>
-					<div className={s.divTableCol}>Cards count<SortingComponent disable={statusLoad === 'loading'}
-																																			onSortChange={onCardsAmountSortChange}/>
-					</div>
-					<div className={s.divTableCol}>Updated<SortingComponent disable={statusLoad === 'loading'}
-																																	onSortChange={onLastUpdateSortChange}/>
-					</div>
-					<div className={s.divTableCol}>Cards</div>
-					<div className={s.divTableCol}>Actions</div>
+					<ShowPackBar myPacks={myPacks} allPacks={allPacks} whoisCard={whoisCard} disabled={isPackLoad === 'loading'}/>
+			<div className={s.tableWrapper}>
+				<h1 style={{marginBottom:'30px'}}>Packs list</h1>
+				<div className={s.divHeaderBlock}>
+					<SearchContainer/>
 				</div>
-				{
-					isPackLoad === 'loading' ?
-						<AuthLoad/>
-						:
-						renderedPacks
-				}
-				<AddPackPage/>
-			</div>
-			<div>
-				<div className={s.divSelectBlock}>
-					<SuperSelect options={[5, 10, 15, 20]} onChangeOption={onPageCountChange}/>
+				<div className={s.divTable}>
+					<div className={s.divTableRow}>
+						<div className={s.divTableCol}>Name</div>
+						<div className={s.divTableCol}>Cards count
+							<SortingComponent disable={isPackLoad === 'loading'}
+																onSortChange={onCardsAmountSortChange}
+							/>
+						</div>
+						<div className={s.divTableCol}>Updated
+							<SortingComponent disable={isPackLoad === 'loading'}
+																onSortChange={onLastUpdateSortChange}/>
+						</div>
+						<div className={s.divTableCol}>Cards</div>
+						<div className={s.divTableCol}>Actions</div>
+					</div>
+					{
+						isPackLoad === 'loading' ?
+							<AuthLoad/>
+							:
+							renderedPacks
+					}
+					<AddPackPage/>
 				</div>
 				<div>
-					{
-						packs.length && <PaginationComponent totalCount={totalCount} pageCount={pageCount} currentPage={pageNumber}
-																								 onPageChanged={onPageChange}/>
-					}
+					<div className={s.divSelectBlock}>
+						<SuperSelect options={[10, 15, 20]} onChangeOption={onPageCountChange}/>
+					</div>
+					<div>
+						{
+							packs.length &&
+							<PaginationComponent totalCount={totalCount} pageCount={pageCount} currentPage={pageNumber}
+																	 onPageChanged={onPageChange}/>
+						}
+					</div>
 				</div>
 			</div>
 		</div>
