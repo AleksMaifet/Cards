@@ -3,6 +3,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppStoreType} from "../../store/store";
 import {logoutTC, updateAvatarTC} from "../../Reducers/login-reducer";
 import s from './Profile.module.css'
+import {Navigate} from "react-router-dom";
+import {PATH} from "../../RoutesBlock/RoutesBlock";
 
 export type filesType = {
 	lastModified: number
@@ -19,20 +21,22 @@ export const Profile = () => {
 	const isAvatar = useSelector((state: AppStoreType) => state.login.avatar)
 	const UpdateAvatar = (e: ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files
-		if (file) {
+		if (file !== null) {
 			const reader = new FileReader();
 			reader.onload = ev => {
 				if (ev.target !== null) {
 					dispatch(updateAvatarTC(ev.target.result))
 				}
 			}
-			if(file[0]){
-				reader.readAsDataURL(file[0])
-			}
+			reader.readAsDataURL(file[0])
 		}
+
 	}
 	const logout = () => {
 		dispatch(logoutTC())
+	}
+	if(!isAuth){
+		return <Navigate to={PATH.LOGINPAGE}/>
 	}
 	return (
 		<div>
@@ -46,8 +50,8 @@ export const Profile = () => {
 					Upload
 				</label>
 			</div>
-			<div className={s.imgContainer}>
-				<img className={s.img} src={isAvatar !== null ? isAvatar : ''}/>
+			<div style={{height: '200px'}}>
+				<img src={isAvatar !== null ? isAvatar : ''}/>
 			</div>
 		</div>
 	)
