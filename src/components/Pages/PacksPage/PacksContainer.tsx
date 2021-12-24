@@ -25,7 +25,7 @@ import {AuthLoad} from "../LoadPage/AuthLoad/AuthLoad";
 import {ShowPackBar} from "../ShowPacksBar/ShowPacksBar";
 
 
-export const Packs = React.memo(() => {
+export const Packs = () => {
 	const dispatch = useDispatch()
 	const totalCount = useSelector<AppStoreType, number>(state => state.packs.cardPacksTotalCount)
 	const pageNumber = useSelector<AppStoreType, number>(state => state.packs.page)
@@ -144,4 +144,4 @@ export const Packs = React.memo(() => {
 			</div>
 		</div>
 	)
-})
+}

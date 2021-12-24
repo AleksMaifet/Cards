@@ -9,6 +9,6 @@ export const handleServerError = (err:any) => {
 export const handleSpinnerTimerEnd = (dispatch: Dispatch<ActionsType>) => {
 	setTimeout(() => {
 	dispatch(isPackLoadAC('success'))
-	}, 1500)
+	}, 2000)
 }
 

@@ -17,7 +17,7 @@ import {SearchCartsContainer} from "./SearchCardsContainer/SearchCartsContainer"
 import {AuthLoad} from "../LoadPage/AuthLoad/AuthLoad";
 
 
-export const Cards = React.memo(() => {
+export const Cards = () => {
 	const totalCount = useSelector<AppStoreType, number>(state => state.cards.cardsTotalCount)
 	const pageNumber = useSelector<AppStoreType, number>(state => state.cards.page)
 	const pageCount = useSelector<AppStoreType, number>(state => state.cards.pageCount)
@@ -119,4 +119,4 @@ export const Cards = React.memo(() => {
 			</div>
 		</div>
 	)
-})
+}
