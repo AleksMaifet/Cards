@@ -1,0 +1,67 @@
+.flipContainer {
+    perspective: 100px;
+}
+
+.selected {
+    transform: rotateX(-180deg);
+}
+
+
+.selected, .front, .back {
+    width: 300px;
+    height: 100px;
+    margin-left: -75px;
+
+}
+.front{
+    margin-left: -150px;
+}
+
+
+.flipper, .selected {
+    transition: 0.6s;
+    transform-style: preserve-3d;
+    /*margin-left: -100px;*/
+    /*position: relative;*/
+    position: absolute;
+}
+
+
+.front, .back {
+    backface-visibility: hidden;
+
+    position: absolute;
+    /*top: 0;*/
+    /*left: 0;*/
+    /*width: 100px;*/
+    /*height: 100px;*/
+    border: 1px solid black;
+}
+
+.buttonBlock{
+    display: flex;
+    flex-direction: column;
+}
+.front {
+    z-index: 2;
+}
+
+
+.back {
+    transform: rotateY(180deg);
+}
+.vertical.flipContainer {
+    /*position: relative;*/
+}
+
+.vertical .back {
+    transform: rotateX(180deg);
+}
+
+.vertical.flipContainer .flipper {
+    transform-origin: 100% 240px; /* half of height */
+}
+
+.vertical.selected .flipper {
+    transform: rotateX(-180deg);
+}

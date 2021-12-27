@@ -1,10 +1,11 @@
 import {Dispatch} from "redux";
 import {AppStoreType} from "../store/store";
-import {AppHandlerType} from "./AppReducer";
+import {AppHandlerType, isLoadAC} from "./AppReducer";
 import {apiCards, CardType, ResponseGetCardsType} from "../ApiRequests/apiCards";
 import {ThunkDispatch} from "redux-thunk";
 import {isPackLoadAC, setPacksPageCount, setPacksPageNumber, sortPackCardsAC} from "./PacksReducer";
 import {handleServerError, handleSpinnerTimerEnd} from "../../utils/utils";
+import {setGrade} from "../ApiRequests/apiGrade";
 
 export const CardsInitState = {
     cards: [] as CardType[],
@@ -30,6 +31,7 @@ type ActionsType =
   | ReturnType<typeof searchAnswerPackAC>
   | ReturnType<typeof setPackIdAC>
   | ReturnType<typeof isPackLoadAC>
+  | ReturnType<typeof updateGradeAC>
 export const cardsReducer = (state: CardsInitStateType = CardsInitState, action: ActionsType):CardsInitStateType => {
     switch (action.type) {
         case "cards/SET-CARD":
@@ -46,6 +48,11 @@ export const cardsReducer = (state: CardsInitStateType = CardsInitState, action:
             return {
                 ...state,
                 ...action.payload
+            }
+        case "cards/UPDATE-GRADE":
+            return {
+                ...state,
+                cards: state.cards.map(card => card._id === action.card_id ? {...card, grade: +action.grade} : card)
             }
         default:
             return state;
@@ -83,7 +90,13 @@ export const searchAnswerPackAC = (cardAnswer: string) => {
         }
     } as const
 }
-
+export const updateGradeAC = (grade: string, card_id: string) => {
+    return {
+        type: 'cards/UPDATE-GRADE',
+        grade,
+        card_id
+    } as const
+}
 export const setCardTC = () => async (dispatch: Dispatch,getState:() => AppStoreType) => {
     const cardsData = getState().cards
     const params = {
@@ -148,5 +161,20 @@ export const updateCardTC = (id:string,title:string) => async (dispatch: ThunkDi
     }
     finally {
         handleSpinnerTimerEnd(dispatch)
+    }
+}
+export const updateGradeTC = (grade: string, card_id: string) => {
+    return (dispatch: Dispatch) => {
+        dispatch(isLoadAC('loading'))
+        setGrade(grade, card_id)
+            .then(res => {
+                dispatch(updateGradeAC(grade, card_id))
+
+            })
+            .catch(err => {
+                const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
+                alert(errorMassage)
+            })
+            .finally(()=>  dispatch(isLoadAC('success')))
     }
 }

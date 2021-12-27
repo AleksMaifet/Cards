@@ -93,8 +93,11 @@ export const Packs = () => {
 								onDeletePackHandler(item._id)
 							}}>Delete</SuperButton>
 						}
+						<NavLink to={`/learn/${item._id}`}>Learn!</NavLink>
 					</div>
 				</div>
+
+
 			</div>
 		)
 	})
