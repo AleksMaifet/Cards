@@ -1,46 +1,46 @@
-import React, {useState, ChangeEvent, KeyboardEvent} from "react";
+import React, {ChangeEvent, KeyboardEvent, useState} from "react";
 import {Modal} from "../../../../modals/Modal";
-import SuperInputText from "../../../superComponents/c1-SuperInputText/SuperInputText";
+import SuperTextArea from "../../../superComponents/TextAreaComponent/TextAreaComponent";
 
 type EditableSpanType = {
-	spanTitle: string
+	answer: string
 	callback: (packId:string,question: string,answer:string) => void
 	packId:string
 	isMyTitle?:boolean
 }
 
-export const EditableSpan = React.memo(({spanTitle, ...props}: EditableSpanType) => {
+export const EditableSpanPage = React.memo(({answer, ...props}: EditableSpanType) => {
 	const [title, setTitle] = useState('')
 	const [changeTitle, setChangeTitle] = useState(false)
 	const changeHandler = () => {
 		setChangeTitle(true)
-		setTitle(spanTitle)
+		setTitle(answer)
 	}
-	const changeInputHandler = (e:ChangeEvent<HTMLInputElement>) => {
+	const changeInputHandler = (e:ChangeEvent<HTMLTextAreaElement>) => {
 	setTitle(e.currentTarget.value)
 	}
 	const activeChangeMode = () => {
-		props.callback(props.packId,title,'')
+		props.isMyTitle &&	props.callback(props.packId,'',title)
 		setChangeTitle(false)
 	}
-	const changeInputEnter = (e:KeyboardEvent<HTMLInputElement>) => {
+	const changeInputEnter = (e:KeyboardEvent<HTMLTextAreaElement>) => {
 		if (e.key === 'Enter') {
 			activeChangeMode()
 		}
 	}
 
 	return (
-		changeTitle && props.isMyTitle
+		changeTitle
 			?
 			<Modal active={changeTitle} setActive={setChangeTitle}>
 				<>
-					<SuperInputText value={title} onChange={changeInputHandler} onBlur={activeChangeMode}
+					<SuperTextArea value={title} onChange={changeInputHandler} onBlur={activeChangeMode}
 								 onKeyPress={changeInputEnter}
 								 autoFocus
 					/>
 				</>
 			</Modal>
 			:
-			<span onDoubleClick={changeHandler}>{spanTitle}</span>
+			<span onDoubleClick={changeHandler}>{answer}</span>
 	)
 })

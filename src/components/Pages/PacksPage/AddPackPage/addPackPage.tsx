@@ -4,45 +4,49 @@ import SuperButton from "../../../superComponents/c2-SuperButton/SuperButton";
 import s from './addPackPage.module.css'
 import {useDispatch} from "react-redux";
 import {addPackTC} from "../../../Reducers/PacksReducer";
+import {Modal} from "../../../../modals/Modal";
 
+type AddPackPageType = {
+	disable:boolean
+}
 
-
-export const AddPackPage = () => {
+export const AddPackPage = ({disable}:AddPackPageType) => {
 	const dispatch = useDispatch()
-	const [visibility, setVisibility] = useState<boolean>(false)
+	const [active,setActive] = useState<boolean>(false)
 	const [addPack, setAddPack] = useState<string>('')
 	const onAddPackModule = () => {
-		setVisibility(true)
+		setActive(true)
 	}
 	const onClosePackModule = () => {
-		setVisibility(false)
+		setActive(false)
 	}
+
 	const addPackHandler = () => {
 		dispatch(addPackTC(addPack))
 		setAddPack('')
 	}
 
 
-
 	return (
-		<div>
-			<SuperButton onClick={onAddPackModule}>Add pack</SuperButton>
-			{visibility && <div className={s.addPackBlock}>
-				<div className={s.addPackBlockWrapper}>
-					<div>
-						<h3>Add new pack</h3>
-					</div>
-					<div>
-						<SuperInputText placeholder='Name pack' onChangeText={setAddPack} value={addPack}/>
-					</div>
-					<div>
-						<SuperButton onClick={onClosePackModule}>Cansel</SuperButton>
-						<SuperButton onClick={addPackHandler}>Save</SuperButton>
+		<>
+			<SuperButton disabled={disable} onClick={onAddPackModule}>Add new pack</SuperButton>
+			<Modal active={active} setActive={setActive}>
+				<div>
+					<div className={s.addPackBlockWrapper}>
+						<div>
+							<h3>Add pack</h3>
+						</div>
+						<div>
+							<SuperInputText placeholder='Name pack' onChangeText={setAddPack} value={addPack}/>
+						</div>
+						<div>
+							<SuperButton onClick={onClosePackModule}>Cansel</SuperButton>
+							<SuperButton disabled={disable} onClick={addPackHandler}>Save</SuperButton>
+						</div>
 					</div>
 				</div>
-			</div>
-			}
-		</div>
+			</Modal>
+		</>
 	)
 }
 

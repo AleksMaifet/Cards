@@ -7,6 +7,7 @@ import {Navigate} from "react-router-dom";
 import {PATH} from "../../RoutesBlock/RoutesBlock";
 import c from "../../../styleComponents/App.module.css";
 import SuperButton from "../../superComponents/c2-SuperButton/SuperButton";
+import {Rating} from "../../Rating/Rating";
 
 export type filesType = {
 	lastModified: number
@@ -34,18 +35,13 @@ export const Profile = () => {
 		}
 
 	}
-	const logout = () => {
-		dispatch(logoutTC())
-	}
+
 	if(!isAuth){
 		return <Navigate to={PATH.LOGINPAGE}/>
 	}
 	return (
 		<div className={c.container}>
 			<div className={s.profileBlock}>
-				<div style={{display: 'flex', justifyContent: 'center'}}>
-					{isAuth && <SuperButton onClick={logout}>logout</SuperButton>}
-				</div>
 				<div>
 					<label className={s.customFileUpload}>
 						<input className={s.customInput} type={'file'} onChange={UpdateAvatar}/>

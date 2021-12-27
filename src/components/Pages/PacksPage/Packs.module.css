@@ -3,7 +3,6 @@
     width: auto;
     height: 700px;
     border-spacing: 5px; /* cellspacing:poor IE support for  this */
-    min-height: 80vh;
     background-color: #FEFEFF;
     border-radius: 8px;
 }
@@ -18,7 +17,7 @@
     float: left; /* fix for  buggy browsers */
     display: table-column;
     width: 200px;
-    background-color: #ccc;
+    background: #ECECF9;
     height: 35px;
     display: flex;
     align-items: center;
@@ -29,11 +28,13 @@
 .divTableBlock {
     display: flex;
     justify-content: center;
+    overflow: auto;
 }
 
 .divHeaderBlock {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
+    align-items: center;
     margin-top: 50px;
 }
 
@@ -54,4 +55,10 @@
 }
 .tableWrapper {
     background-color: #FEFEFF;
+}
+
+.divPaclTitle {
+    display: flex;
+    margin: 30px 0 0 30px;
+    font-size: 22px;
 }

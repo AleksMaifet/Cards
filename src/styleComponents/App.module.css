@@ -3,3 +3,34 @@
     justify-content: center;
     align-items: center;
 }
+
+.logOutWrraper {
+    display: flex;
+    justify-content: center;
+    height: 60px;
+    align-items: center;
+}
+.navLinkWrraper {
+    padding: 20px 50px;
+    line-height: 16px;
+    letter-spacing: 0.4px;
+    color: #2D2E46;
+    opacity: 0.4;
+    height: 60px;
+    display: flex;
+    width: 200px;
+    justify-content: space-between;
+}
+.navLinkWrraper_Active{
+    padding: 20px 50px;
+    line-height: 16px;
+    text-align: center;
+    letter-spacing: 0.4px;
+    color: #2D2E46;
+    opacity: 1;
+    border-bottom: 3px solid #21268F;
+    background-color:#DCCCDB;
+    display: flex;
+    width: 200px;
+    justify-content: space-between;
+}

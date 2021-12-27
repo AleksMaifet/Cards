@@ -1,9 +1,9 @@
-
+import React from "react";
 type SortingComponentPropsType = {
     onSortChange: (rate: number) => void
     disable:boolean
 }
-export const SortingComponent = ({onSortChange,disable}: SortingComponentPropsType) => {
+export const SortingComponent = React.memo(({onSortChange,disable}: SortingComponentPropsType) => {
     const onUpSortChangeCallback = () => {
         onSortChange(1)
     }
@@ -16,4 +16,4 @@ export const SortingComponent = ({onSortChange,disable}: SortingComponentPropsTy
             <button disabled={disable} onClick={onDownSortChangeCallback}> ↓</button>
         </>
     )
-}
+})

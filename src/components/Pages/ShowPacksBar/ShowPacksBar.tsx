@@ -31,7 +31,7 @@ export const ShowPackBar = ({...props}:SearchContainerType) => {
 				<SuperButton disabled={disabled}
 										 illuminated={whoisCard.length === 0} onClick={allPacksHandler}>All</SuperButton>
 			</div>
-			<div>
+			<div style={{marginTop:'30px'}}>
 							<div style={{marginBottom: '15px'}}><h3>Number of cards</h3></div>
 							<Range disabled={disabled}/>
 

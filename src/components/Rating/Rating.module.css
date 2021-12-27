@@ -1,0 +1,19 @@
+.rating_result {
+    width: 265px;
+    margin: 0 auto;
+}
+.rating_result span {
+    padding: 0;
+    font-size: 32px;
+    margin: 0 3px;
+    line-height: 1;
+    color: lightgrey;
+    text-shadow: 1px 1px #bbb;
+}
+.rating_result > span:before {
+    content: '★';
+}
+.rating_result .span_active {
+    color: gold;
+    text-shadow: 1px 1px #c60;
+}

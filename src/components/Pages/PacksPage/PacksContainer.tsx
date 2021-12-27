@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from "react";
+import React, {useCallback, useEffect, useRef} from "react";
 import s from "./Packs.module.css"
 import {useDispatch, useSelector} from "react-redux";
 import {AppStoreType} from "../../store/store";
@@ -11,9 +11,7 @@ import {
 	sortPackCardsAC,
 	updatePackTC
 } from "../../Reducers/PacksReducer";
-import SuperButton from "../../superComponents/c2-SuperButton/SuperButton";
 import {SortingComponent} from "../../superComponents/SortingComponent/SortingComponent";
-import {PaginationComponent} from "../../superComponents/PaginationComponent/PaginationComponent";
 import SuperSelect from "../../superComponents/c5-SuperSelect/SuperSelect";
 import {SearchContainer} from "./SearchContainer/SearchContainer";
 import {AddPackPage} from "./AddPackPage/addPackPage";
@@ -23,9 +21,11 @@ import {PackType} from "../../ApiRequests/apiPacks";
 import {IsLoadType} from "../../Reducers/AppReducer";
 import {AuthLoad} from "../LoadPage/AuthLoad/AuthLoad";
 import {ShowPackBar} from "../ShowPacksBar/ShowPacksBar";
+import {DeletePageContainer} from "../DeletePage/DeletePage";
+import {PaginationComponent} from "../../superComponents/PaginationComponent/PaginationComponent";
 
 
-export const Packs = () => {
+export const Packs =() => {
 	const dispatch = useDispatch()
 	const totalCount = useSelector<AppStoreType, number>(state => state.packs.cardPacksTotalCount)
 	const pageNumber = useSelector<AppStoreType, number>(state => state.packs.page)
@@ -47,9 +47,11 @@ export const Packs = () => {
 
 	const onCardsAmountSortChange = useCallback((rate: number) => {
 		dispatch(sortPackCardsAC(`${rate}cardsCount`))
+		dispatch(setPacksPageNumber(1))
 	}, [dispatch])
 	const onLastUpdateSortChange = useCallback((rate: number) => {
 		dispatch(sortPackCardsAC(`${rate}updated`))
+		dispatch(setPacksPageNumber(1))
 	}, [dispatch])
 	const onPageChange = useCallback((value: number) => {
 		dispatch(setPacksPageNumber(value))
@@ -62,9 +64,11 @@ export const Packs = () => {
 	}, [dispatch])
 	const myPacks = useCallback(() => {
 		userId && dispatch(changeWhoisCardAC(userId))
+		dispatch(setPacksPageNumber(1))
 	}, [dispatch, userId])
 	const allPacks = useCallback(() => {
 		dispatch(changeWhoisCardAC(''))
+		dispatch(setPacksPageNumber(1))
 	}, [dispatch])
 
 	const changeTitlePack = useCallback((id: string, spanTitle: string) => {
@@ -72,8 +76,10 @@ export const Packs = () => {
 	}, [dispatch])
 
 
+
+
 	const renderedPacks = packs.map(item => {
-		const update = item.updated.slice(0, 10).split('-').reverse().join('.')
+		const updated = new Date(item.updated).toLocaleDateString()
 		return (
 			<div key={item._id} className={s.divTableRow}>
 				<div className={s.divTableCol}>
@@ -81,17 +87,14 @@ export const Packs = () => {
 												packId={item._id}/>
 				</div>
 				<div className={s.divTableCol}>{item.cardsCount}</div>
-				<div className={s.divTableCol}>{update}</div>
+				<div className={s.divTableCol}>{updated}</div>
 				<div className={s.divTableCol}>
 					<NavLink to={`/cards/${item._id}`}>Cards</NavLink>
 				</div>
 				<div>
 					<div className={s.divTableCol}>
 						{userId && item.user_id === userId &&
-						<SuperButton
-							onClick={() => {
-								onDeletePackHandler(item._id)
-							}}>Delete</SuperButton>
+						<DeletePageContainer _id={item._id} onDeletePackHandler={onDeletePackHandler} title={item.name}/>
 						}
 					</div>
 				</div>
@@ -100,26 +103,31 @@ export const Packs = () => {
 	})
 	return (
 		<div className={s.divTableBlock}>
-					<ShowPackBar myPacks={myPacks} allPacks={allPacks} whoisCard={whoisCard} disabled={isPackLoad === 'loading'}/>
+			<ShowPackBar myPacks={myPacks} allPacks={allPacks} whoisCard={whoisCard} disabled={isPackLoad === 'loading'}/>
 			<div className={s.tableWrapper}>
-				<h1 style={{marginBottom:'30px'}}>Packs list</h1>
+				<h1 className={s.divPaclTitle}>Packs list</h1>
 				<div className={s.divHeaderBlock}>
-					<SearchContainer/>
+					<div>
+						<SearchContainer/>
+					</div>
+					<div>
+						<AddPackPage disable={isPackLoad === 'loading'}/>
+					</div>
 				</div>
 				<div className={s.divTable}>
 					<div className={s.divTableRow}>
-						<div className={s.divTableCol}>Name</div>
-						<div className={s.divTableCol}>Cards count
+						<div className={s.divTableCol}><span style={{fontWeight:'bolder'}}>Name</span></div>
+						<div className={s.divTableCol}><span style={{fontWeight:'bolder'}}>Cards count</span>
 							<SortingComponent disable={isPackLoad === 'loading'}
 																onSortChange={onCardsAmountSortChange}
 							/>
 						</div>
-						<div className={s.divTableCol}>Updated
+						<div className={s.divTableCol}><span style={{fontWeight:'bolder'}}>Updated</span>
 							<SortingComponent disable={isPackLoad === 'loading'}
 																onSortChange={onLastUpdateSortChange}/>
 						</div>
-						<div className={s.divTableCol}>Cards</div>
-						<div className={s.divTableCol}>Actions</div>
+						<div className={s.divTableCol}><span style={{fontWeight:'bolder'}}>Cards</span></div>
+						<div className={s.divTableCol}><span style={{fontWeight:'bolder'}}>Actions</span></div>
 					</div>
 					{
 						isPackLoad === 'loading' ?
@@ -127,13 +135,12 @@ export const Packs = () => {
 							:
 							renderedPacks
 					}
-					{isPackLoad !== 'loading' && <AddPackPage/>}
 				</div>
 				<div>
 					<div className={s.divSelectBlock}>
 						<SuperSelect options={[10, 15, 20]} onChangeOption={onPageCountChange}/>
 					</div>
-					<div>
+					<div style={{margin:'30px'}}>
 						{
 							packs.length &&
 							<PaginationComponent totalCount={totalCount} pageCount={pageCount} currentPage={pageNumber}

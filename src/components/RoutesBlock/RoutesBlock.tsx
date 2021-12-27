@@ -28,7 +28,7 @@ export const PATH = {
 
 export const RoutesBlock = () => {
 	return (
-		<div>
+		<div style={{marginTop:'25px'}}>
 			<Routes>
 				<Route path={'/'} element={<Navigate to={PATH.LOGINPAGE}/>}/>
 				<Route path={PATH.NEWPASSPAGE} element={

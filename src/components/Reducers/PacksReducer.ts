@@ -38,7 +38,7 @@ export const packsReducer = (state = PacksInitState, action: ActionsType): Packs
 		case "Packs/SET-PACK":
 			return {
 				...state,
-				...action.data
+				...action.data,
 			}
 		case "Packs/SET-PACKS-PAGE-NUMBER":
 		case "Packs/SET-PACKS-PAGE-COUNT":

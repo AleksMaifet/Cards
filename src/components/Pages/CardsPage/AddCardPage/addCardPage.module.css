@@ -5,9 +5,12 @@
 }
 .addPackBlockWrapper {
     width: 400px;
-    height: 200px;
+    height: 315px;
     background-color: white;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+}
+.addPackBlockTextArea {
+    margin: 20px 0;
 }

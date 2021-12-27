@@ -55,11 +55,9 @@ export const apiCards = {
 			}
 		})
 	},
-	updateCard(_id:string,question:string){
+	updateCard(card:{}){
 		return initial.put('',{
-			card:{
-				_id,
-				question
-			}},{})
+			card
+		},{})
 	}
 }

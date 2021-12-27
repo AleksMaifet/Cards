@@ -3,7 +3,7 @@ import s from "../PacksPage/Packs.module.css";
 import {useDispatch, useSelector} from "react-redux";
 import {AppStoreType} from "../../store/store";
 import SuperButton from "../../superComponents/c2-SuperButton/SuperButton";
-import {deleteCardTC, setCardTC, setPackIdAC, updateCardTC} from "../../Reducers/CardsReducer";
+import {deleteCardTC, setCardsPageNumber, setCardTC, setPackIdAC, updateCardTC} from "../../Reducers/CardsReducer";
 import {SortingComponent} from "../../superComponents/SortingComponent/SortingComponent";
 import SuperSelect from "../../superComponents/c5-SuperSelect/SuperSelect";
 import {PaginationComponent} from "../../superComponents/PaginationComponent/PaginationComponent";
@@ -15,6 +15,9 @@ import {setPacksPageCount, setPacksPageNumber, sortPackCardsAC} from "../../Redu
 import {EditableSpan} from "../PacksPage/EditableSpan/EditableSpan";
 import {SearchCartsContainer} from "./SearchCardsContainer/SearchCartsContainer";
 import {AuthLoad} from "../LoadPage/AuthLoad/AuthLoad";
+import {DeletePageContainer} from "../DeletePage/DeletePage";
+import {EditableSpanPage} from "./EditableSpan/EditableSpan";
+import {Rating} from "../../Rating/Rating";
 
 
 export const Cards = () => {
@@ -30,7 +33,10 @@ export const Cards = () => {
 	const isPackLoad =  useSelector<AppStoreType, IsLoadType>(state => state.packs.isPackLoad)
 	const dispatch = useDispatch()
 	const navigate = useNavigate()
-	const goBack = () => navigate(-1)
+	const goBack = useCallback(() => {
+		navigate(-1)
+		dispatch(setPacksPageNumber(1))
+	},[dispatch,navigate])
 	const {packId} = useParams<'packId'>()
 
 	useEffect(() => {
@@ -44,8 +50,8 @@ export const Cards = () => {
 	const onSortByLastUpdate = useCallback((rate: number) => {
 		dispatch(sortPackCardsAC(`${rate}updated`))
 	},[dispatch])
-	const onPageChange = useCallback((value: number) => {
-		dispatch(setPacksPageNumber(value))
+	const onCartChange = useCallback((value: number) => {
+		dispatch(setCardsPageNumber(value))
 	},[dispatch])
 	const onPageCountChange = useCallback((value: string) => {
 		dispatch(setPacksPageCount(+value))
@@ -53,26 +59,28 @@ export const Cards = () => {
 	const onDeleteCardHandler = useCallback((id: string) => {
 		dispatch(deleteCardTC(id))
 	}, [dispatch])
-	const changeTitlePack = useCallback((id: string, spanTitle: string) => {
-		dispatch(updateCardTC(id, spanTitle))
+	const changeTitlePack = useCallback((id: string,question:string,answer:string) => {
+		dispatch(updateCardTC(id,question,answer))
 	}, [dispatch])
 
 	const renderedCards = cards.map(item => {
+		const updated = new Date(item.updated).toLocaleDateString()
 		return (
 			<div key={item._id} className={s.divTableRow}>
 				<div className={s.divTableCol}>
 					<EditableSpan isMyTitle={item.user_id === userId} spanTitle={item.question} callback={changeTitlePack}
 												packId={item._id}/>
 				</div>
-				<div className={s.divTableCol}>{item.answer}</div>
-				<div className={s.divTableCol}>{item.updated.slice(0, 10).split('-').reverse().join('.')}</div>
-				<div className={s.divTableCol}>{Math.round(item.grade)}</div>
+				<div className={s.divTableCol}>
+					<EditableSpanPage isMyTitle={item.user_id === userId} answer={item.answer} callback={changeTitlePack} packId={item._id}/>
+				</div>
+				<div className={s.divTableCol}>{updated}</div>
+				<div className={s.divTableCol}>
+					<Rating ratingValue={Math.round(item.grade)}/>
+				</div>
 				<div className={s.divTableCol}>
 					{item.user_id === userId &&
-					<SuperButton
-						onClick={() => {
-							onDeleteCardHandler(item._id)
-						}}>Delete</SuperButton>
+					<DeletePageContainer _id={item._id} onDeletePackHandler={onDeleteCardHandler} title={item.question}/>
 					}
 				</div>
 			</div>
@@ -82,20 +90,27 @@ export const Cards = () => {
 		<div>
 			<div className={s.divTableBlock}>
 				<div className={s.divTable}>
-					<div style={{display:'flex'}}>
+					<div style={{display: 'flex'}}>
 						<SuperButton onClick={goBack}>Back</SuperButton>
 					</div>
 					<div className={s.divHeaderBlock}>
 						<SearchCartsContainer/>
 					</div>
 					<div className={s.divTableRow}>
-						<div className={s.divTableCol}>Question</div>
-						<div className={s.divTableCol}>Answer</div>
-						<div className={s.divTableCol}>Updated<SortingComponent disable={isPackLoad === 'loading'}
-																																		onSortChange={onSortByLastUpdate}/></div>
-						<div className={s.divTableCol}>Grade<SortingComponent disable={isPackLoad === 'loading'}
-																																	onSortChange={onSortByGrade}/></div>
-						<div className={s.divTableCol}>Actions</div>
+						<div className={s.divTableCol}><span style={{fontWeight:'bolder'}}>Question</span></div>
+						<div className={s.divTableCol}><span style={{fontWeight:'bolder'}}>Answer</span></div>
+						<div className={s.divTableCol}><span style={{fontWeight:'bolder'}}>Updated</span>
+							<SortingComponent
+								disable={isPackLoad === 'loading'}
+								onSortChange={onSortByLastUpdate}
+							/>
+						</div>
+						<div className={s.divTableCol}><span style={{fontWeight:'bolder'}}>Grade</span>
+							<SortingComponent
+								disable={isPackLoad === 'loading'}
+								onSortChange={onSortByGrade}
+							/></div>
+						<div className={s.divTableCol}><span style={{fontWeight:'bolder'}}>Actions</span></div>
 					</div>
 					{
 						isPackLoad === 'loading' ?
@@ -103,17 +118,17 @@ export const Cards = () => {
 							:
 							renderedCards
 					}
-					{isYoursCard && isPackLoad !== 'loading'&& <AddCardPage disable={false} packId={packId}/>}
+					{isYoursCard && isPackLoad !== 'loading' && <AddCardPage disable={false} packId={packId}/>}
 				</div>
 			</div>
 			<div>
 				<div className={s.divSelectBlock}>
 					<SuperSelect options={[10, 15, 20]} onChangeOption={onPageCountChange}/>
 				</div>
-				<div>
+				<div style={{margin:'30px'}}>
 					{
 						cards.length && <PaginationComponent totalCount={totalCount} pageCount={pageCount} currentPage={pageNumber}
-																								 onPageChanged={onPageChange}/>
+																								 onPageChanged={onCartChange}/>
 					}
 				</div>
 			</div>

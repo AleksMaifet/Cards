@@ -1,5 +1,6 @@
 import React from "react";
 import s from "./PaginationComponent.module.css"
+import SuperButton from "../c2-SuperButton/SuperButton";
 
 type PaginationPropsType = {
 	totalCount: number
@@ -9,6 +10,7 @@ type PaginationPropsType = {
 
 }
 export const PaginationComponent: React.FC<PaginationPropsType> = React.memo((props) => {
+
 	const onNextPageCallback = () => {
 		props.onPageChanged(props.currentPage + 1)
 	}
@@ -32,18 +34,18 @@ export const PaginationComponent: React.FC<PaginationPropsType> = React.memo((pr
 	}
 
 	return (
-		<div>
-			{1 !== props.currentPage ? <button onClick={onPreviousPageCallback}>Previous</button> : null}
+		<div className={s.selectedPageWrapper}>
+			{1 !== props.currentPage ? <SuperButton onClick={onPreviousPageCallback}>Previous</SuperButton> : null}
 			{pagesForRender.map((p,i) => {
-				return <span key={i}
+				return <div className={s.Page}><span key={i}
 					onClick={() => {
 						props.onPageChanged(p)
 					}}
 					className={props.currentPage === p ? s.selectedPage : s.page}>
                             {p}
-                        </span>
+                        </span></div>
 			})}
-			{props.currentPage !== pagesAmount ? <button onClick={onNextPageCallback}>Next</button> : null}
+			{props.currentPage !== pagesAmount ? <SuperButton onClick={onNextPageCallback}>Next</SuperButton> : null}
 		</div>
 	)
 })
