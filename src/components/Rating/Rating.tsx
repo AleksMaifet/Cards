@@ -26,6 +26,6 @@ type StarType = {
 export const Star = React.memo((props: StarType) => {
 	const starRating = props.selected ? s.span_active : ''
 	return (
-		<span className={starRating}></span>
+		<span className={starRating}/>
 	)
 })

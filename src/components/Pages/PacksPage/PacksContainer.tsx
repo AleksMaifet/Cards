@@ -40,6 +40,7 @@ export const Packs =() => {
 	const maxCardsCountUser = useSelector<AppStoreType, number>(state => state.packs.maxCardsCountUser)
 
 
+
 	useEffect(() => {
 		dispatch(setPacksTC())
 	}, [dispatch, pageNumber, pageCount, sortPacks, whoisCard, searchByValue,minCardsCountUser,maxCardsCountUser])
@@ -80,6 +81,7 @@ export const Packs =() => {
 
 	const renderedPacks = packs.map(item => {
 		const updated = new Date(item.updated).toLocaleDateString()
+		const learn = item.cardsCount > 0
 		return (
 			<div key={item._id} className={s.divTableRow}>
 				<div className={s.divTableCol}>
@@ -96,14 +98,13 @@ export const Packs =() => {
 						{userId && item.user_id === userId &&
 						<DeletePageContainer _id={item._id} onDeletePackHandler={onDeletePackHandler} title={item.name}/>
 						}
-						<NavLink to={`/learn/${item._id}`}>Learn!</NavLink>
+						{learn && <NavLink to={`/learn/${item._id}`}>Learn!</NavLink>}
 					</div>
 				</div>
-
-
 			</div>
 		)
 	})
+
 	return (
 		<div className={s.divTableBlock}>
 			<ShowPackBar myPacks={myPacks} allPacks={allPacks} whoisCard={whoisCard} disabled={isPackLoad === 'loading'}/>
@@ -146,8 +147,12 @@ export const Packs =() => {
 					<div style={{margin:'30px'}}>
 						{
 							packs.length &&
-							<PaginationComponent disable={isPackLoad === 'loading'} totalCount={totalCount} pageCount={pageCount} currentPage={pageNumber}
-																	 onPageChanged={onPageChange}/>
+							<PaginationComponent disable={isPackLoad === 'loading'}
+																	 totalCount={totalCount}
+																	 pageCount={pageCount}
+																	 currentPage={pageNumber}
+																	 onPageChanged={onPageChange}
+							/>
 						}
 					</div>
 				</div>

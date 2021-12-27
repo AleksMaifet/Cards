@@ -1,24 +1,24 @@
-import React, {useState} from "react";
+import React, {useCallback, useState} from "react";
 import s from "./Card.module.css";
 import {updateGradeTC} from "../../../Reducers/CardsReducer";
-import {useDispatch, useSelector} from "react-redux";
-import {AppStoreType} from "../../../store/store";
-import {IsLoadType} from "../../../Reducers/AppReducer";
+import {useDispatch} from "react-redux";
 import SuperButton from "../../../superComponents/c2-SuperButton/SuperButton";
+import {ControlRating} from "../../../Rating/ControlRating";
 
 type CardPropsType = {
     question: string
     answer: string
     id: string
 }
-export const Card = (props: CardPropsType) => {
-    const isLoading = useSelector<AppStoreType, IsLoadType>(state => state.app.isLoad)
+export const Card = React.memo((props: CardPropsType) => {
     const [active, setActive] = useState(false)
+    const [rate, setRate] = useState<number>(0)
     const className = active ? s.selected : s.flipContainer
     const dispatch = useDispatch()
-    const onSetGrade = (grade: string) => {
-        dispatch(updateGradeTC(grade, props.id))
-    }
+    const onSetGrade = useCallback( () => {
+        rate !== 0 && dispatch(updateGradeTC(`${rate}`, props.id))
+        setActive(false)
+    },[dispatch,props.id,rate])
     // useEffect(()=> {
     //         setActive(false)
     // }, [props.id, props.question, props.answer])
@@ -35,47 +35,18 @@ export const Card = (props: CardPropsType) => {
                   <div className={s.back}
                     // onClick={()=>{setActive(false)}}
                   >
-                      <div style={{whiteSpace:'pre-wrap'}}>
+                      <div style={{whiteSpace: 'pre-wrap'}}>
                           {props.answer}
                       </div>
                       <div>
                           <div className={s.buttonBlock}>
-                              <div>
-                                  <SuperButton disabled={isLoading === "loading"} onClick={() => {
-                                      onSetGrade("1")
-                                      setActive(false)
-                                  }}>Didn't know
-                                  </SuperButton>
-                                  <SuperButton disabled={isLoading === "loading"} onClick={() => {
-                                      onSetGrade("2")
-                                      setActive(false)
-                                  }}>Forgot
-                                  </SuperButton>
-                              </div>
-                              <div>
-                                  <SuperButton disabled={isLoading === "loading"} onClick={() => {
-                                      onSetGrade("3")
-                                      setActive(false)
-                                  }}>Too much time
-                                  </SuperButton>
-                                  <SuperButton disabled={isLoading === "loading"} onClick={() => {
-                                      onSetGrade("4")
-                                      setActive(false)
-                                  }}>Confused
-                                  </SuperButton>
-                              </div>
-                              <div>
-                                  <SuperButton disabled={isLoading === "loading"} onClick={() => {
-                                      onSetGrade("5")
-                                      setActive(false)
-                                  }}>Know
-                                  </SuperButton>
-                              </div>
+                              <ControlRating rate={rate} setRate={setRate}/>
                           </div>
+                          <SuperButton onClick={onSetGrade}>Grade</SuperButton>
                       </div>
                   </div>
               </div>
           </div>
       </div>
     )
-}
+})
