@@ -167,7 +167,7 @@ export const updateCardTC = (_id:string,question:string,answer:string) => async 
     }
     dispatch(isPackLoadAC('loading'))
     try {
-        await apiCards.updateCard(id,title)
+        await apiCards.updateCard(params)
         dispatch(setCardTC())
     } catch (err:any) {
         handleServerError(err)

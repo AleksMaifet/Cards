@@ -1,12 +1,14 @@
 import React from "react";
 import s from "./PaginationComponent.module.css"
-import SuperButton from "../c2-SuperButton/SuperButton";
+import arrowRight from './../../../images/Path 2 Copy 1.svg'
+import arrowLeft from './../../../images/Path 2 Copy 2.svg'
 
 type PaginationPropsType = {
 	totalCount: number
 	pageCount: number
 	currentPage: number
 	onPageChanged: (pageNumber: number) => void
+	disable:boolean
 
 }
 export const PaginationComponent: React.FC<PaginationPropsType> = React.memo((props) => {
@@ -35,17 +37,17 @@ export const PaginationComponent: React.FC<PaginationPropsType> = React.memo((pr
 
 	return (
 		<div className={s.selectedPageWrapper}>
-			{1 !== props.currentPage ? <SuperButton onClick={onPreviousPageCallback}>Previous</SuperButton> : null}
+			{1 !== props.currentPage ? <img style={{cursor:'pointer',width:'30px',height:'30px'}} src={arrowLeft} onClick={onPreviousPageCallback}/> : null}
 			{pagesForRender.map((p,i) => {
-				return <div className={s.Page}><span key={i}
+				return <div className={s.Page}><button style={{margin:'5px',width:'40px',cursor:'pointer'}} disabled={props.disable} key={i}
 					onClick={() => {
 						props.onPageChanged(p)
 					}}
-					className={props.currentPage === p ? s.selectedPage : s.page}>
+					className={props.currentPage === p ? s.selectedPage : ''}>
                             {p}
-                        </span></div>
+                        </button></div>
 			})}
-			{props.currentPage !== pagesAmount ? <SuperButton onClick={onNextPageCallback}>Next</SuperButton> : null}
+			{props.currentPage !== pagesAmount ? <img style={{cursor:'pointer',width:'30px',height:'30px'}} src={arrowRight} onClick={onNextPageCallback}/> : null}
 		</div>
 	)
 })

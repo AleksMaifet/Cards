@@ -27,15 +27,30 @@
 }
 
 
-.front, .back {
+.front{
     backface-visibility: hidden;
-
+    white-space: pre-wrap;
     position: absolute;
-    /*top: 0;*/
-    /*left: 0;*/
+    top: 0;
+    left: 0;
     /*width: 100px;*/
     /*height: 100px;*/
-    border: 1px solid black;
+    box-shadow: #adcfff 0 -12px 6px inset;
+    border-radius: 40em;
+    border-style: none;
+    cursor: pointer;
+}
+.back {
+    backface-visibility: hidden;
+    white-space: pre-wrap;
+    position: absolute;
+    top: 0;
+    left: -80px;
+    /*width: 100px;*/
+    /*height: 100px;*/
+    box-shadow: #adcfff 0 -12px 6px inset;
+    border-radius: 40em;
+    border-style: none;
 }
 
 .buttonBlock{
@@ -55,7 +70,12 @@
 }
 
 .vertical .back {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
     transform: rotateX(180deg);
+    height: 350px;
+    width: 500px;
 }
 
 .vertical.flipContainer .flipper {

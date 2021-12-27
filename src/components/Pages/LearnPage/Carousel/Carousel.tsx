@@ -1,5 +1,7 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import s from "./Carousel.module.css"
+import arrowRight from './../../../../images/Path 2 Copy 1.svg'
+import arrowLeft from './../../../../images/Path 2 Copy 2.svg'
 
 export const CarouselItem = ({children, width}: any) => {
     return (
@@ -28,36 +30,18 @@ const Carousel = ({children}: any) => {
                 className={s.inner}
                 style={{transform: `translateX(-${activeIndex * 100}%)`}}>
                 {React.Children.map(children, (child, index) => {
-                    return React.cloneElement(child, {width: "100%"});
+                    return React.cloneElement (child,{width:'100%'})
                 })}
             </div>
             <div className={s.indicators}>
-                <button
-                    onClick={() => {
+                <div style={{pointerEvents:'all'}}>
+                    <img style={{cursor:'pointer',width:'50px',height:'50px'}} src={arrowLeft} onClick={() => {
                         updateIndex(activeIndex - 1);
-                    }}
-                >
-                    Prev
-                </button>
-                {React.Children.map(children, (child, index) => {
-                    return (
-                        <button
-                            className={`${index === activeIndex ? s.active : ""}`}
-                            onClick={() => {
-                                updateIndex(index);
-                            }}
-                        >
-                            {index + 1}
-                        </button>
-                    );
-                })}
-                <button
-                    onClick={() => {
-                        updateIndex(activeIndex + 1);
-                    }}
-                >
-                    Next
-                </button>
+                    }}/>
+                </div>
+                <div style={{pointerEvents:'all'}}>
+                    <img style={{cursor:'pointer',width:'50px',height:'50px'}} src={arrowRight} onClick={() => {updateIndex(activeIndex + 1);}}/>
+                </div>
             </div>
         </div>
     );

@@ -146,7 +146,7 @@ export const Packs =() => {
 					<div style={{margin:'30px'}}>
 						{
 							packs.length &&
-							<PaginationComponent totalCount={totalCount} pageCount={pageCount} currentPage={pageNumber}
+							<PaginationComponent disable={isPackLoad === 'loading'} totalCount={totalCount} pageCount={pageCount} currentPage={pageNumber}
 																	 onPageChanged={onPageChange}/>
 						}
 					</div>

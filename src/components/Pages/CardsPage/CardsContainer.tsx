@@ -127,7 +127,7 @@ export const Cards = () => {
 				</div>
 				<div style={{margin:'30px'}}>
 					{
-						cards.length && <PaginationComponent totalCount={totalCount} pageCount={pageCount} currentPage={pageNumber}
+						cards.length && <PaginationComponent disable={isPackLoad === 'loading'} totalCount={totalCount} pageCount={pageCount} currentPage={pageNumber}
 																								 onPageChanged={onCartChange}/>
 					}
 				</div>

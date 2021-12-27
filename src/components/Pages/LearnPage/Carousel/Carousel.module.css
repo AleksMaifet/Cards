@@ -5,20 +5,25 @@
 .inner {
     white-space: nowrap;
     transition: transform 0.3s;
+    transform: translateX(-6%);
 }
 
 .carouselItem {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 200px;
+    min-height: 75vh;
     background-color: transparent;
     color: #fff;
 }
 
 .indicators {
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
+    position: absolute;
+    width: 100%;
+    bottom: 39%;
+    pointer-events: none;
 }
 
 .indicators > button {
