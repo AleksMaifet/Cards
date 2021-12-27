@@ -96,8 +96,11 @@ export const Packs =() => {
 						{userId && item.user_id === userId &&
 						<DeletePageContainer _id={item._id} onDeletePackHandler={onDeletePackHandler} title={item.name}/>
 						}
+						<NavLink to={`/learn/${item._id}`}>Learn!</NavLink>
 					</div>
 				</div>
+
+
 			</div>
 		)
 	})
