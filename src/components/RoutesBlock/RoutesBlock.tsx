@@ -24,7 +24,7 @@ export const PATH = {
 	REGISTRATIONPAGE: '/regist',
 	CHECKMAIL: '/check-mail',
 	PACKS: '/packs',
-	CARDS: '/cards/:packId',
+	CARDS: '/cards',
 	LEARN: '/learn/:packId',
 }
 
@@ -46,7 +46,7 @@ export const RoutesBlock = () => {
 						<Packs/>
 					</InitializationPrivateRoute>
 				}/>
-				<Route path={PATH.CARDS} element={
+				<Route path={`${PATH.CARDS}/:packId`} element={
 					<InitializationPrivateRoute>
 						<Cards/>
 					</InitializationPrivateRoute>

@@ -68,7 +68,7 @@ export const forgotPasswordTC = (email: string) => {
 			dispatch(forgotPasswordAC(success))
 			dispatch(emailRecoveryAC(email))
 		} catch (err:any) {
-			handleServerError(err)
+			handleServerError(err,dispatch)
 		} finally {
 			dispatch(isLoadAC('success'))
 		}
@@ -82,7 +82,7 @@ export const newPasswordTC = (newPass: string, tokenId: string | undefined) => {
 			await cardsForgotAPI.setNewPassword(newPass, tokenId)
 			dispatch(newPasswordAC(true))
 		} catch (err: any) {
-			handleServerError(err)
+			handleServerError(err,dispatch)
 		} finally {
 			dispatch(isLoadAC('success'))
 		}

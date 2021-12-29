@@ -120,7 +120,7 @@ export const setCardTC = () => async (dispatch: Dispatch,getState:() => AppStore
        const {data} =  await apiCards.getCards(params)
         dispatch(setCardsAC(data))
     } catch (err:any) {
-        handleServerError(err)
+        handleServerError(err,dispatch)
     }
     finally {
         handleSpinnerTimerEnd(dispatch)
@@ -140,7 +140,7 @@ export const addPackTC = (packId:string,question:string,answer:string) => async 
         await apiCards.postCard(params)
         dispatch(setCardTC())
     } catch (err:any) {
-        handleServerError(err)
+        handleServerError(err,dispatch)
     }
     finally {
         handleSpinnerTimerEnd(dispatch)
@@ -153,7 +153,7 @@ export const deleteCardTC = (id:string) => async (dispatch: ThunkDispatch<AppSto
         await apiCards.deleteCard(id)
         dispatch(setCardTC())
     } catch (err:any) {
-        handleServerError(err)
+        handleServerError(err,dispatch)
     }
     finally {
         handleSpinnerTimerEnd(dispatch)
@@ -170,7 +170,7 @@ export const updateCardTC = (_id:string,question:string,answer:string) => async 
         await apiCards.updateCard(params)
         dispatch(setCardTC())
     } catch (err:any) {
-        handleServerError(err)
+        handleServerError(err,dispatch)
     }
     finally {
         handleSpinnerTimerEnd(dispatch)

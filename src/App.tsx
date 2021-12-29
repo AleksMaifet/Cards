@@ -6,6 +6,7 @@ import {Load} from "./components/Pages/LoadPage/Load";
 import {useDispatch, useSelector} from "react-redux";
 import {authMeTC} from './components/Reducers/login-reducer';
 import {AppStoreType} from "./components/store/store";
+import {PopUp} from "./modals/Pop-Up/PopUp";
 
 export const App = () => {
 	const dispatch = useDispatch()
@@ -23,6 +24,7 @@ export const App = () => {
 		<div className="App">
 			<Header/>
 			<Load/>
+			<PopUp/>
 			<RoutesBlock/>
 		</div>
 	);

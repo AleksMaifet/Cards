@@ -4,6 +4,7 @@ import {updateGradeTC} from "../../../Reducers/CardsReducer";
 import {useDispatch} from "react-redux";
 import SuperButton from "../../../superComponents/c2-SuperButton/SuperButton";
 import {ControlRating} from "../../../Rating/ControlRating";
+import {isErrorAC} from "../../../Reducers/AppReducer";
 
 type CardPropsType = {
     question: string
@@ -11,14 +12,20 @@ type CardPropsType = {
     id: string
 }
 export const Card = React.memo((props: CardPropsType) => {
+    const dispatch = useDispatch()
     const [active, setActive] = useState(false)
     const [rate, setRate] = useState<number>(0)
     const className = active ? s.selected : s.flipContainer
-    const dispatch = useDispatch()
+    const closeCardForLearn = () =>  setActive(false)
     const onSetGrade = useCallback( () => {
-        rate !== 0 && dispatch(updateGradeTC(`${rate}`, props.id))
-        setActive(false)
+        if(rate > 0){
+            dispatch(updateGradeTC(`${rate}`, props.id))
+            closeCardForLearn()
+            return
+        }
+        dispatch(isErrorAC('Pls choose mark'))
     },[dispatch,props.id,rate])
+
     // useEffect(()=> {
     //         setActive(false)
     // }, [props.id, props.question, props.answer])
@@ -42,7 +49,10 @@ export const Card = React.memo((props: CardPropsType) => {
                           <div className={s.buttonBlock}>
                               <ControlRating rate={rate} setRate={setRate}/>
                           </div>
-                          <SuperButton onClick={onSetGrade}>Grade</SuperButton>
+                          <div>
+                              <SuperButton onClick={closeCardForLearn}>Cansel</SuperButton>
+                              <SuperButton onClick={onSetGrade}>Grade</SuperButton>
+                          </div>
                       </div>
                   </div>
               </div>

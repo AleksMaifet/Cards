@@ -145,7 +145,7 @@ export const setPacksTC = () => async (dispatch: Dispatch,getState:() => AppStor
 		const {data} = await apiPacks.getPacks(params)
 		dispatch(setPackAC(data))
 	} catch (err:any) {
-		handleServerError(err)
+		handleServerError(err,dispatch)
 	} finally {
 		handleSpinnerTimerEnd(dispatch)
 	}
@@ -157,7 +157,7 @@ export const addPackTC = (newPackTitle:string) => async (dispatch: ThunkDispatch
 		await apiPacks.postPack(newPackTitle)
 		dispatch(setPacksTC())
 	} catch (err:any) {
-		handleServerError(err)
+		handleServerError(err,dispatch)
 	}
 	finally {
 		handleSpinnerTimerEnd(dispatch)
@@ -171,7 +171,7 @@ export const deletePackTC = (id:string) => async (dispatch: ThunkDispatch<AppSto
 		dispatch(setPacksTC())
 	}
 	catch (err:any) {
-		handleServerError(err)
+		handleServerError(err,dispatch)
 	}
 	finally {
 		handleSpinnerTimerEnd(dispatch)
@@ -185,7 +185,7 @@ export const updatePackTC = (id:string,title:string) => async (dispatch: ThunkDi
 		dispatch(setPacksTC())
 	}
 	catch (err:any) {
-	handleServerError(err)
+	handleServerError(err,dispatch)
 	}
 	finally {
 		handleSpinnerTimerEnd(dispatch)

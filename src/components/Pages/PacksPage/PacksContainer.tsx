@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef} from "react";
+import React, {useCallback, useEffect} from "react";
 import s from "./Packs.module.css"
 import {useDispatch, useSelector} from "react-redux";
 import {AppStoreType} from "../../store/store";
@@ -17,33 +17,24 @@ import {SearchContainer} from "./SearchContainer/SearchContainer";
 import {AddPackPage} from "./AddPackPage/addPackPage";
 import {EditableSpan} from "./EditableSpan/EditableSpan";
 import {NavLink} from "react-router-dom";
-import {PackType} from "../../ApiRequests/apiPacks";
-import {IsLoadType} from "../../Reducers/AppReducer";
 import {AuthLoad} from "../LoadPage/AuthLoad/AuthLoad";
 import {ShowPackBar} from "../ShowPacksBar/ShowPacksBar";
 import {DeletePageContainer} from "../DeletePage/DeletePage";
 import {PaginationComponent} from "../../superComponents/PaginationComponent/PaginationComponent";
+import {getPacks} from "../../store/selectors/getPacks";
+import {PATH} from "../../RoutesBlock/RoutesBlock";
 
 
 export const Packs =() => {
 	const dispatch = useDispatch()
-	const totalCount = useSelector<AppStoreType, number>(state => state.packs.cardPacksTotalCount)
-	const pageNumber = useSelector<AppStoreType, number>(state => state.packs.page)
-	const pageCount = useSelector<AppStoreType, number>(state => state.packs.pageCount)
-	const sortPacks = useSelector<AppStoreType, string>(state => state.packs.sortPacksCards)
 	const userId = useSelector<AppStoreType, string | null>(state => state.login._id)
-	const whoisCard = useSelector<AppStoreType, string | ''>(state => state.packs.whoisCard)
-	const searchByValue = useSelector<AppStoreType, string>(state => state.packs.searchByPacks)
-	const isPackLoad = useSelector<AppStoreType, IsLoadType>(state => state.packs.isPackLoad)
-	const packs = useSelector<AppStoreType, Array<PackType>>(state => state.packs.cardPacks)
-	const minCardsCountUser = useSelector<AppStoreType, number>(state => state.packs.minCardsCountUser)
-	const maxCardsCountUser = useSelector<AppStoreType, number>(state => state.packs.maxCardsCountUser)
-
+	const packs = useSelector(getPacks)
+	const isPackLoad = packs.isPackLoad === 'loading'
 
 
 	useEffect(() => {
 		dispatch(setPacksTC())
-	}, [dispatch, pageNumber, pageCount, sortPacks, whoisCard, searchByValue,minCardsCountUser,maxCardsCountUser])
+	}, [dispatch, packs.page, packs.pageCount, packs.sortPacksCards ,packs.whoisCard, packs.searchByPacks, packs.minCardsCountUser,packs.maxCardsCount,])
 
 
 	const onCardsAmountSortChange = useCallback((rate: number) => {
@@ -71,7 +62,6 @@ export const Packs =() => {
 		dispatch(changeWhoisCardAC(''))
 		dispatch(setPacksPageNumber(1))
 	}, [dispatch])
-
 	const changeTitlePack = useCallback((id: string, spanTitle: string) => {
 		dispatch(updatePackTC(id, spanTitle))
 	}, [dispatch])
@@ -79,7 +69,7 @@ export const Packs =() => {
 
 
 
-	const renderedPacks = packs.map(item => {
+	const renderedPacks = packs.cardPacks.map(item => {
 		const updated = new Date(item.updated).toLocaleDateString()
 		const learn = item.cardsCount > 0
 		return (
@@ -91,7 +81,7 @@ export const Packs =() => {
 				<div className={s.divTableCol}>{item.cardsCount}</div>
 				<div className={s.divTableCol}>{updated}</div>
 				<div className={s.divTableCol}>
-					<NavLink to={`/cards/${item._id}`}>Cards</NavLink>
+					<NavLink to={`${PATH.CARDS}/${item._id}`}>Cards</NavLink>
 				</div>
 				<div>
 					<div className={s.divTableCol}>
@@ -107,7 +97,7 @@ export const Packs =() => {
 
 	return (
 		<div className={s.divTableBlock}>
-			<ShowPackBar myPacks={myPacks} allPacks={allPacks} whoisCard={whoisCard} disabled={isPackLoad === 'loading'}/>
+			<ShowPackBar myPacks={myPacks} allPacks={allPacks} whoisCard={packs.whoisCard} disabled={isPackLoad}/>
 			<div className={s.tableWrapper}>
 				<h1 className={s.divPaclTitle}>Packs list</h1>
 				<div className={s.divHeaderBlock}>
@@ -115,26 +105,26 @@ export const Packs =() => {
 						<SearchContainer/>
 					</div>
 					<div>
-						<AddPackPage disable={isPackLoad === 'loading'}/>
+						<AddPackPage disable={isPackLoad}/>
 					</div>
 				</div>
 				<div className={s.divTable}>
 					<div className={s.divTableRow}>
 						<div className={s.divTableCol}><span style={{fontWeight:'bolder'}}>Name</span></div>
 						<div className={s.divTableCol}><span style={{fontWeight:'bolder'}}>Cards count</span>
-							<SortingComponent disable={isPackLoad === 'loading'}
+							<SortingComponent disable={isPackLoad}
 																onSortChange={onCardsAmountSortChange}
 							/>
 						</div>
 						<div className={s.divTableCol}><span style={{fontWeight:'bolder'}}>Updated</span>
-							<SortingComponent disable={isPackLoad === 'loading'}
+							<SortingComponent disable={isPackLoad}
 																onSortChange={onLastUpdateSortChange}/>
 						</div>
-						<div className={s.divTableCol}><span style={{fontWeight:'bolder'}}>Cards</span></div>
-						<div className={s.divTableCol}><span style={{fontWeight:'bolder'}}>Actions</span></div>
+						<div className={s.divTableCol}><span style={{fontWeight: 'bolder'}}>Cards</span></div>
+						<div className={s.divTableCol}><span style={{fontWeight: 'bolder'}}>Actions</span></div>
 					</div>
 					{
-						isPackLoad === 'loading' ?
+						isPackLoad ?
 							<AuthLoad/>
 							:
 							renderedPacks
@@ -144,13 +134,13 @@ export const Packs =() => {
 					<div className={s.divSelectBlock}>
 						<SuperSelect options={[10, 15, 20]} onChangeOption={onPageCountChange}/>
 					</div>
-					<div style={{margin:'30px'}}>
+					<div style={{margin: '30px'}}>
 						{
-							packs.length &&
-							<PaginationComponent disable={isPackLoad === 'loading'}
-																	 totalCount={totalCount}
-																	 pageCount={pageCount}
-																	 currentPage={pageNumber}
+							packs.cardPacks.length &&
+							<PaginationComponent disable={isPackLoad}
+																	 totalCount={packs.cardPacksTotalCount}
+																	 pageCount={packs.pageCount}
+																	 currentPage={packs.page}
 																	 onPageChanged={onPageChange}
 							/>
 						}

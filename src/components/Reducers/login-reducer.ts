@@ -1,6 +1,6 @@
 import {Dispatch} from "redux";
 import {apiLogin, apiUpdate, ResponseLoginType} from "../ApiRequests/apiLogin";
-import {isLoadAC, isLoadAuthAC} from "./AppReducer";
+import {isErrorAC, isLoadAC, isLoadAuthAC} from "./AppReducer";
 
 
 type initialStateType = {
@@ -103,7 +103,10 @@ export const loginTC = (email: string, password: string, rememberMe: boolean) =>
             avatar: (res.data.avatar ? res.data.avatar : null),
         }
         dispatch(setUserData(data))
-    }).catch((err) => dispatch(setError(err.response.data.error)))
+    }).catch((err) => {
+        dispatch(setError(err.response.data.error))
+        dispatch(isErrorAC(err.response.data.error))
+    })
         .finally(() => dispatch(isLoadAC('success')))
 }
 
@@ -112,7 +115,7 @@ export const logoutTC = () => (dispatch: Dispatch) => {
     apiLogin.logout().then(() => {
             dispatch(setLogout())
         }
-    ).catch((err) => console.log(err))
+    ).catch((err) => dispatch(isErrorAC(err)))
         .finally(() => dispatch(isLoadAC('success')))
 }
 
@@ -123,7 +126,7 @@ export const updateAvatarTC = (avatar: string | ArrayBuffer | null) => async (di
         dispatch(updateUserAC(updatedUser))
     } catch (err: any) {
         const errorMassage = err.response ? err.response.data.error : 'Check internet connection!'
-        alert(errorMassage)
+        dispatch(isErrorAC(errorMassage))
     } finally {
         dispatch(isLoadAC('success'))
     }
